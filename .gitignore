@@ -30,14 +30,12 @@
 *.exe
 *.out
 *.app
-/obj
+*/**/bin/Debug
+*/**/obj/Debug
 /.vs/ExpensesManager/v16
 /.vs/ExpensesManager/DesignTimeBuild
 /bin/Debug/net6.0
 /bin/Debug/netcoreapp3.1
 /.vs
 /.db
-/ExpensesManager.DB/Migrations
-/ExpensesManager.WebAPI/bin/Debug/net6.0
-/ExpensesManager.WebAPI/bin/Debug/netcoreapp3.1
-/ExpensesManager.WebAPI/.db
+*/Migrations
