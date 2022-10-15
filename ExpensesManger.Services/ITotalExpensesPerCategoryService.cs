@@ -8,7 +8,7 @@ namespace ExpensesManger.Services
     {
         Dictionary<string,double > GetCategoriesSum(int month, int year);
         double GetCategorySum(int month, int year, string category);
-        List<TotalExpensePerCategory> GetCategories();
+        List<TotalExpensePerCategory> GetTotalCategories();
         TotalExpensePerCategory EditTotalExpensePerCategory(TotalExpensePerCategory expensePerCategory, string category, int month, int year);
         Dictionary<CategoryExpenseMapper.CategoryGroup, List<ExpenseRecord>> CreateTotalExpensesPerCategory(List<ExpenseRecord> montlyExpenses);
         void DeleteExpensePerCategory(TotalExpensePerCategory expensePerCategory);

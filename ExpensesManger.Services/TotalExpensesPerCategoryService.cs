@@ -27,7 +27,7 @@ namespace ExpensesManger.Services
             return expensePerCategory == null ? -1 : expensePerCategory.Total_Amount;
         }
 
-        public List<TotalExpensePerCategory> GetCategories()
+        public List<TotalExpensePerCategory> GetTotalCategories()
         {
             return appDbContext.TotalExpensesPerCategory.ToList();
         }

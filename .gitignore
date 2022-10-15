@@ -33,8 +33,11 @@
 /obj
 /.vs/ExpensesManager/v16
 /.vs/ExpensesManager/DesignTimeBuild
-/bin/Debug/netcoreapp6.0
-/bin/Debug/netcoreapp3/1
+/bin/Debug/net6.0
+/bin/Debug/netcoreapp3.1
 /.vs
 /.db
-/Migrations
+/ExpensesManager.DB/Migrations
+/ExpensesManager.WebAPI/bin/Debug/net6.0
+/ExpensesManager.WebAPI/bin/Debug/netcoreapp3.1
+/ExpensesManager.WebAPI/.db

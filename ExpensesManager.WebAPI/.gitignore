@@ -37,4 +37,4 @@
 /bin/Debug/netcoreapp3/1
 /.vs
 /.db
-/Migrations
+/ExpensesManager.DB/Migrations

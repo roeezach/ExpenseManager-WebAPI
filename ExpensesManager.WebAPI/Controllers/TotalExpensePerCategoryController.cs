@@ -32,10 +32,10 @@ namespace ExpensesManager.WebAPI.Controllers
             return Ok(m_TotalExpensesPerCategoryService.GetCategorySum(month, year, category));
         }
 
-        [HttpGet(Name = "GetCategories")]
+        [HttpGet(Name = "GetTotalCategories")]
         public IActionResult GetCategories()
         {
-            return Ok(m_TotalExpensesPerCategoryService.GetCategories());
+            return Ok(m_TotalExpensesPerCategoryService.GetTotalCategories());
         }
 
         [HttpPost]
@@ -53,7 +53,7 @@ namespace ExpensesManager.WebAPI.Controllers
         [HttpDelete]
         public IActionResult DeleteTotalExpensePerCategory(DateTime timePeriod, string catrgory)
         {
-            var totalExpensesPerCategoryToDelete = m_TotalExpensesPerCategoryService.GetCategories().FirstOrDefault(e => (Convert.ToInt32(e.Month) == timePeriod.Month) 
+            var totalExpensesPerCategoryToDelete = m_TotalExpensesPerCategoryService.GetTotalCategories().FirstOrDefault(e => (Convert.ToInt32(e.Month) == timePeriod.Month) 
                                                                                        && e.Year == timePeriod.Year && e.Category == catrgory);
             if(totalExpensesPerCategoryToDelete != null)
             {
