@@ -201,12 +201,12 @@ FakesAssemblies/
 *.out
 *.app
 */**/bin/Debug
-*/**/obj/Debug
+obj/Debug
 /.vs/ExpensesManager/v16
 /.vs/ExpensesManager/DesignTimeBuild
 bin/Debug/net6.0
 bin/Debug/netcoreapp3.1
 bin
 /.vs
-**.db
+*.db
 ExpensesManager.DB/Migrations
