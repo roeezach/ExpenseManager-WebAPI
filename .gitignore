@@ -181,3 +181,32 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*/**/bin/Debug
+*/**/obj/Debug
+/.vs/ExpensesManager/v16
+/.vs/ExpensesManager/DesignTimeBuild
+bin/Debug/net6.0
+bin/Debug/netcoreapp3.1
+bin
+/.vs
+**.db
+ExpensesManager.DB/Migrations
