@@ -205,10 +205,8 @@ obj/
 .vs/
 /.vs/ExpensesManager/v16
 /.vs/ExpensesManager/DesignTimeBuild
-bin/Debug/net6.0
-bin/Debug/netcoreapp3.1
-bin
-.vs
-/vs
+/bin/Debug/net6.0
+/bin/Debug/netcoreapp3.1
+bin/
 *.db
 ExpensesManager.DB/Migrations
