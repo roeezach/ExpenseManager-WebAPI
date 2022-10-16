@@ -30,11 +30,14 @@
 *.exe
 *.out
 *.app
-/obj
-/.vs/ExpensesManager/v16
-/.vs/ExpensesManager/DesignTimeBuild
-/bin/Debug/netcoreapp6.0
-/bin/Debug/netcoreapp3/1
-/.vs
-/.db
-/ExpensesManager.DB/Migrations
+
+# folders
+\bin
+\obj
+\.vs/ExpensesManager/v16
+\.vs/ExpensesManager/DesignTimeBuild
+\bin/Debug/net6.0
+\bin/Debug/netcoreapp3.1
+\.vs
+\.db
+\ExpensesManager.DB/Migrations
