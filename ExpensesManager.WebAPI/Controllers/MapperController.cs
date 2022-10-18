@@ -8,7 +8,7 @@ using ExpensesManager.DB.Models;
 namespace ExpensesManager.WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class MapperController : ControllerBase
     {
         private readonly IExpenseMapperService m_ExpenseMapperService;

@@ -15,6 +15,8 @@ builder.Services.AddTransient<IExpenseReaderService, ExpenseReadService> ();
 builder.Services.AddTransient<IExpenseMapperService, ExpenseMapperService>();
 builder.Services.AddTransient<ITotalExpensesPerCategoryService, TotalExpensesPerCategoryService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<ISplitwiseExpensesService, SplitewiseExpenseService>();
+builder.Services.AddTransient<IRecalculatedExpenseService, RecalculatedExpenseService>();
 
 builder.Services.AddEndpointsApiExplorer();
 

@@ -6,7 +6,7 @@ using ExpensesManager.BuisnessLogic.Core;
 namespace ExpensesManager.WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService m_CategoryService;

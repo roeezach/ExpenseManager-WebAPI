@@ -63,7 +63,7 @@ namespace ExpensesManger.Services
         }
 
         public void DeleteExpensePerCategory(TotalExpensePerCategory expensePerCategory)
-        {
+        {           
             appDbContext.Remove(expensePerCategory);
             appDbContext.SaveChanges();
         }

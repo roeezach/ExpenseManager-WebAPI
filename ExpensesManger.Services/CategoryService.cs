@@ -1,13 +1,11 @@
 ﻿using ExpensesManager.DB;
 using ExpensesManager.DB.Models;
 
-
 namespace ExpensesManger.Services
 {
     public class CategoryService : ICategoryService
     {
         private AppDbContext appDbContext;
-
         public CategoryService(AppDbContext appDbContext)
         {
             this.appDbContext = appDbContext;

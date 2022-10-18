@@ -9,9 +9,9 @@ namespace ExpensesManager.Integrations.GetExpensesAPI
 
         internal static DateTime ExpensesDatesStart { get; set; }
 
-        internal static Task<string> SplitWiseApiHandlerWithDates(ExpenseReader reader)
+        internal static Task<string> SplitWiseApiHandlerWithDates(DateTime dateRangeStart)
         {
-            ExpensesDatesStart = reader.GetExpenseFileDateRangeStart();
+            ExpensesDatesStart = dateRangeStart;
             GetExpensesRequestBuilder.HeaderBuilder();
             GetExpensesRequestBuilder.SplitwiseAuthenticationRequestBuilder();
 
@@ -21,6 +21,16 @@ namespace ExpensesManager.Integrations.GetExpensesAPI
             return expensesDataString;
         }
 
+        internal static Task<string> SplitWiseApiHandler(DateTime dateRangeStart)
+        {
+            ExpensesDatesStart = dateRangeStart;
+            GetExpensesRequestBuilder.HeaderBuilder();
+            GetExpensesRequestBuilder.SplitwiseAuthenticationRequestBuilder();
+
+            Task<string> expensesDataString = GetExpensesResponseProcesser.GetTaskAsyncResponse();
+
+            return expensesDataString;
+        }
 
     }
 }
