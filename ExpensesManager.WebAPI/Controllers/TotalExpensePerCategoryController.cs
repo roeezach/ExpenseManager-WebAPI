@@ -8,7 +8,7 @@ using ExpensesManager.DB.Models;
 namespace ExpensesManager.WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class TotalExpensePerCategoryController : ControllerBase
     {
         private readonly ITotalExpensesPerCategoryService m_TotalExpensesPerCategoryService;
@@ -41,6 +41,7 @@ namespace ExpensesManager.WebAPI.Controllers
         [HttpPost]
         public IActionResult CreateTotalExpensesPerCategories(DateTime timePeriod)
         {
+            /// to edit after implemntation of recalculation
             List<ExpenseRecord> currentTotalCategoryExpense = m_ExpenseMapperService.GetMapExpenses();
             var totalExpensesToCreate = currentTotalCategoryExpense
                 .Where(e => (Convert.ToInt32(e.Linked_Month) == timePeriod.Month) && DateTime.Parse(e.Transaction_Date).Year == timePeriod.Year).ToList();

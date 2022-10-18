@@ -4,7 +4,7 @@ using ExpensesManger.Services;
 namespace ExpensesManager.WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class ReaderController : ControllerBase
     {
 
