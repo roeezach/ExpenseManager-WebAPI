@@ -25,14 +25,16 @@ namespace ExpensesManger.Services
         }
 
         #endregion
-        
+
+        #region Public Methods
+
         public List<ExpenseRecord> GetMapExpenses()
         {
             return appDbContext.Expenses.ToList();
         }
-        
+
         public void DeleteExpenses(DateTime currentExpenseMonth)
-        {            
+        {
             var expensesPerMonth = Mapper.GetExpensesPerMonth(appDbContext.Expenses.ToList(), currentExpenseMonth, CURRENT_USER_ID);
             foreach (var expense in expensesPerMonth)
             {
@@ -54,21 +56,27 @@ namespace ExpensesManger.Services
             return appDbContext.Expenses.ToList();
         }
 
-        public ExpenseRecord EditExpense(ExpenseRecord editedExpense,int expenseID)
+        public ExpenseRecord EditExpense(ExpenseRecord editedExpense, int expenseID)
         {
-            var expense = appDbContext.Expenses.FirstOrDefault(e=> e.TransactionID == expenseID);
-            
+            var expense = appDbContext.Expenses.FirstOrDefault(e => e.TransactionID == expenseID);
+
             expense = editedExpense;
             appDbContext.SaveChanges();
 
             return expense;
         }
 
+        #endregion
+
+        #region Internal Methods
+
         internal static ExpenseRecord SetExpenseMapperToExpenseRecord(ExpenseMapper expenseMapper)
         {
+            string month = DateUtils.GetExpenseLinkedMonth(expenseMapper.Transaction_Date.Value, DateUtils.GetUserChargeDay(CURRENT_USER_ID)).ToString();
+
             return new ExpenseRecord()
             {
-                TransactionID = Utils.GenerateRandomID(),
+                TransactionID = DateUtils.GenerateRandomID(),
                 Transaction_Date = expenseMapper.Transaction_Date.ToString(),
                 Card_Details = expenseMapper.Card_Details,
                 Record_Create_Date = DateTime.Now.ToString(),
@@ -80,10 +88,10 @@ namespace ExpensesManger.Services
                 Exchange_Description = expenseMapper.Exchange_Description,
                 Category = expenseMapper.CategoryData.Category.ToString(),
                 User_ID = CURRENT_USER_ID,
-                Linked_Month = Utils.GetExpenseLinkedMonth(expenseMapper.Transaction_Date.Value, Utils.GetUserChargeDay(CURRENT_USER_ID)).ToString()
+                Linked_Month = month,
+                Linked_Year = DateUtils.GetExpenseLinkedYearAsDateTime(expenseMapper.Transaction_Date.Value, DateUtils.GetUserChargeDay(CURRENT_USER_ID), Convert.ToInt32(month)).Year.ToString()
             };
-        }
-
-
+        } 
+        #endregion
     }
 }

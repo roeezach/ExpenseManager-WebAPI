@@ -3,10 +3,17 @@ using System.Text.RegularExpressions;
 
 namespace ExpensesManager.BuisnessLogic.Core
 {
-    public static class Utils
+    public static class DateUtils
     {
         #region Const
+
         private const int ONE_MONTH = 1;
+        private const int ONE_YEAR = 1;
+        private const int INVALID_MONTH = 0;
+        private const int LAST_MONTH_IN_YEAR = 12;
+        private const int FIRST_MONTH_IN_YEAR = 1;
+        private const int DEFAULT_DAY = 1;
+
         #endregion
 
         #region Methods
@@ -34,24 +41,39 @@ namespace ExpensesManager.BuisnessLogic.Core
         /// <param name="creditCardChargeDay">charge day of the credit card. i.e - 1, 10 </param>
         /// <param name="year">year of the expense</param>
         /// <returns></returns>
-        public static int RegexMatcherMonthToCharge(string searchItem, int creditCardChargeDay, DateTime currentPeriodRange)
+        public static DateTime RegexMatcherDateToCharge(string searchItem, int creditCardChargeDay, DateTime currentPeriodRange)
         {
             Match dateStructureFinder;
-            string pattern = @"\d\d.\d\d|\d\.\d\d|\d\.\d\.\d|\d\d.\d";
+            string pattern = @"\d\d.\d\d|\d\.\d\d|\d\.\d\.\d|\d\d.\d|\d\.\d";
             if (Regex.IsMatch(searchItem, pattern))
             {
-                dateStructureFinder = Regex.Match(searchItem,pattern);
+                dateStructureFinder = Regex.Match(searchItem, pattern);
                 string date = dateStructureFinder.Value.ToString() + $".{currentPeriodRange.Year}";
                 DateTime parsedDate = DateTime.Parse(date);
-                return GetExpenseLinkedMonth(parsedDate, creditCardChargeDay);
+                int month = GetExpenseLinkedMonth(parsedDate, creditCardChargeDay);
+
+                return GetExpenseLinkedYearAsDateTime(currentPeriodRange, creditCardChargeDay, month);
             }
             else
-                return currentPeriodRange.Month;
+            {
+                return new DateTime(currentPeriodRange.Year, currentPeriodRange.Month, DEFAULT_DAY);
+            }
         }
 
         public static int GetExpenseLinkedMonth(DateTime expenseDate, int creditCardChargeDay)
         {
-            return  creditCardChargeDay > expenseDate.Day ? expenseDate.Month - ONE_MONTH : expenseDate.Month;
+            var returnedMonth = creditCardChargeDay >= expenseDate.Day ? expenseDate.Month - ONE_MONTH : expenseDate.Month;
+            return returnedMonth == INVALID_MONTH ? LAST_MONTH_IN_YEAR : returnedMonth;
+        }
+
+        public static DateTime GetExpenseLinkedYearAsDateTime(DateTime expenseDate, int creditCardChargeDay, int parsedMonth)
+        {
+            if (expenseDate.Month == FIRST_MONTH_IN_YEAR && parsedMonth == LAST_MONTH_IN_YEAR)
+                return new DateTime(expenseDate.Year - ONE_YEAR, parsedMonth, DEFAULT_DAY);
+            else if (parsedMonth != expenseDate.Month)
+                return new DateTime(expenseDate.Year, parsedMonth, DEFAULT_DAY);
+            else
+                return new DateTime(expenseDate.Year, expenseDate.Month, DEFAULT_DAY);
         }
 
         /// <summary>

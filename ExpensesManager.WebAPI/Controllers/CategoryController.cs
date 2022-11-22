@@ -32,7 +32,7 @@ namespace ExpensesManager.WebAPI.Controllers
         public IActionResult CreateCategory(Categories catrgory)
         {
             Categories categoryItem = m_CategoryService.CreateCategory(catrgory);
-            return CreatedAtRoute("GetCategories", new { requestID = Utils.GenerateRandomID()}, categoryItem);
+            return CreatedAtRoute("GetCategories", new { requestID = DateUtils.GenerateRandomID()}, categoryItem);
         }
 
         [HttpDelete]

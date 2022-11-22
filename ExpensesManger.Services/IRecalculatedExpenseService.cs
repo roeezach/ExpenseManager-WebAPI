@@ -10,5 +10,6 @@ namespace ExpensesManger.Services
         RecalculatedExpenseRecord EditRecalculatedExpenseRecord(RecalculatedExpenseRecord recalculatedExpenseForEdit);
         List<RecalculatedExpenseRecord> CreateRecalculatedExpenseRecords(DateTime fromDate);
         void DeleteRecalculatedExpenseRecords(DateTime fromDate);
+        void DeleteRecalculatedExpenseRecord(int recalculatedExpenseRecordID);
     }
 }

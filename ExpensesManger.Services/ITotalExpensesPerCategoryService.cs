@@ -6,11 +6,13 @@ namespace ExpensesManger.Services
 {
     public interface ITotalExpensesPerCategoryService
     {
-        Dictionary<string,double > GetCategoriesSum(int month, int year);
+        Dictionary<string,double> GetCategoriesSum(int month, int year);        
         double GetCategorySum(int month, int year, string category);
+        double GetTotalExpensesSum(int month, int year);
         List<TotalExpensePerCategory> GetTotalCategories();
         TotalExpensePerCategory EditTotalExpensePerCategory(TotalExpensePerCategory expensePerCategory, string category, int month, int year);
-        Dictionary<CategoryExpenseMapper.CategoryGroup, List<ExpenseRecord>> CreateTotalExpensesPerCategory(List<ExpenseRecord> montlyExpenses);
+        Dictionary<CategoryExpenseMapper.CategoryGroup, List<ExpenseRecord>> CreateTotalExpensesPerCategory(List<ExpenseRecord> montlyExpenses,DateTime fromDate);
         void DeleteExpensePerCategory(TotalExpensePerCategory expensePerCategory);
+        void DeleteAllTotalExpensesPerTimePeriod(DateTime fromDate);
     }
 }

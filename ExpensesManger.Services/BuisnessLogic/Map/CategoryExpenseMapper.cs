@@ -20,7 +20,7 @@ namespace ExpensesManger.Services.BuisnessLogic.Map
             Transport,
             InternetAndTV,
             NotMappedYet,
-            HouseComittee,
+            HouseComitee,
             Pubs,
             Resturant,
             Electricity,
@@ -56,20 +56,22 @@ namespace ExpensesManger.Services.BuisnessLogic.Map
         /// </summary>
         /// <param name="mappedList"></param>
         /// <returns></returns>
-        public Dictionary<CategoryGroup,List<ExpenseRecord>> SumCategories(List<ExpenseRecord> mappedList)
+        public Dictionary<CategoryGroup,List<ExpenseRecord>> AppendExpenseRecordToCategories(List<ExpenseRecord> mappedList)
         {
             Dictionary<CategoryGroup, List<ExpenseRecord>> categorisedExpensesDict = new Dictionary<CategoryGroup, List<ExpenseRecord>>();
+            double categoriesSum = 0;
 
             foreach (int category in Enum.GetValues(typeof(CategoryGroup)))
             {
-                ExpenseRecord expenseWithCategroy = new();
                 ExpensesInCategory = new List<ExpenseRecord>();
                 
                 foreach (ExpenseRecord item in mappedList)
                 {
-                    expenseWithCategroy = AddItemsToExpensesInCategory(expenseWithCategroy, item, ((CategoryGroup)category).ToString());
+                    AddItemsToExpensesInCategoryList(item, ((CategoryGroup)category).ToString());
                 }
-                if (expenseWithCategroy.Debit_Amount == 0)// in case no purchase were made for this category
+
+                categoriesSum = ExpensesInCategory.Sum(cat => cat.Debit_Amount);
+                if (categoriesSum == 0)// in case no purchase were made for this category
                         Category = (CategoryGroup)category;
 
                 categorisedExpensesDict.Add((CategoryGroup)category, ExpensesInCategory);
@@ -80,7 +82,7 @@ namespace ExpensesManger.Services.BuisnessLogic.Map
 
         public static CategoryGroup GetCategoryMapping(string transactionName)
         {
-            // will replace this with DB call to each user definitions
+            // will replace this with DB call to each user definitions - the list is in the debug folder
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"MappedCategoties.json");
 
             List<MappedCategoryNames> mappedCategories = JsonConvert.DeserializeObject<List<MappedCategoryNames>>(File.ReadAllText(path));
@@ -115,44 +117,44 @@ namespace ExpensesManger.Services.BuisnessLogic.Map
         /// <summary>
         /// test this functionality after refactor
         /// </summary>
-        /// <param name="candidateExpenseToAdd"></param>
+        /// <param name="createdExpense"></param>
         /// <param name="currentExpense"></param>
         /// <param name="category"></param>
-        private ExpenseRecord AddItemsToExpensesInCategory(ExpenseRecord candidateExpenseToAdd, ExpenseRecord currentExpense, string category)
+        private void AddItemsToExpensesInCategoryList(ExpenseRecord currentExpense, string category)
         {
             bool isForeignTransaction = false;
+            ExpenseRecord createdExpense = new();
+
 
             if (currentExpense.Category == category &&!string.IsNullOrEmpty(currentExpense.Expense_Description) && currentExpense.Expense_Description != TITLE_DESCRIPTION)
             {
-                if (string.IsNullOrEmpty(candidateExpenseToAdd.Expense_Description))
+                if (string.IsNullOrEmpty(createdExpense.Expense_Description))
                 {
-                    candidateExpenseToAdd.Category = currentExpense.Category;
-                    candidateExpenseToAdd.Expense_Description = currentExpense.Expense_Description;
-                    candidateExpenseToAdd.Transaction_Date= currentExpense.Transaction_Date;
-                    candidateExpenseToAdd.Currency = currentExpense.Currency;
-                    candidateExpenseToAdd.Record_Create_Date = candidateExpenseToAdd.Record_Create_Date;
-                    candidateExpenseToAdd.User_ID = currentExpense.User_ID;
-                    candidateExpenseToAdd.Linked_Month = currentExpense.Linked_Month;
+                    createdExpense.Category = currentExpense.Category;
+                    createdExpense.Expense_Description = currentExpense.Expense_Description;
+                    createdExpense.Transaction_Date= currentExpense.Transaction_Date;
+                    createdExpense.Currency = currentExpense.Currency;
+                    createdExpense.Record_Create_Date = createdExpense.Record_Create_Date;
+                    createdExpense.User_ID = currentExpense.User_ID;
+                    createdExpense.Linked_Month = currentExpense.Linked_Month;
                 }
 
-                if (!string.IsNullOrEmpty(candidateExpenseToAdd.Exchange_Description))
+                if (!string.IsNullOrEmpty(createdExpense.Exchange_Description))
                 {
                     isForeignTransaction = true;
-                    candidateExpenseToAdd.Price_Amount = currentExpense.Price_Amount.Value; // it was += => need to make sure the amounts are correct
-                    candidateExpenseToAdd.Debit_Amount = currentExpense.Price_Amount.Value;
-                    candidateExpenseToAdd.Exchange_Rate = Utils.RegexMatcherForgeignCurrency(currentExpense.Expense_Description);
+                    createdExpense.Price_Amount = currentExpense.Price_Amount.Value;
+                    createdExpense.Debit_Amount = currentExpense.Price_Amount.Value;
+                    createdExpense.Exchange_Rate = DateUtils.RegexMatcherForgeignCurrency(currentExpense.Expense_Description);
                 }
 
                 if (!isForeignTransaction)
                 {
-                    candidateExpenseToAdd.Debit_Amount = currentExpense.Debit_Amount;
-                    candidateExpenseToAdd.Price_Amount = currentExpense.Price_Amount;
+                    createdExpense.Debit_Amount += currentExpense.Debit_Amount;
+                    createdExpense.Price_Amount += currentExpense.Price_Amount;
                 }
 
-                ExpensesInCategory.Add(candidateExpenseToAdd);
+                ExpensesInCategory.Add(createdExpense);
             }
-
-            return candidateExpenseToAdd;
         } 
 
         #endregion
