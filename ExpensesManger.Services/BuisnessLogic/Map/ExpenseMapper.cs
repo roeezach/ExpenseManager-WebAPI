@@ -85,7 +85,7 @@ namespace ExpensesManager.Services
             List<ExpenseRecord> filteredList = distinctCategoryList.Where(item => item.Price_Amount > 0).ToList();
 
             return filteredList.Where(t => ((t.Transaction_Date == currentExpenseMonth.Month.ToString()) ||
-                                               Utils.GetExpenseLinkedMonth(currentExpenseMonth, Utils.GetUserChargeDay(userID)) == currentExpenseMonth.Month)).ToList();
+                                               DateUtils.GetExpenseLinkedMonth(currentExpenseMonth, DateUtils.GetUserChargeDay(userID)) == currentExpenseMonth.Month)).ToList();
         }
 
         #endregion Public Methods

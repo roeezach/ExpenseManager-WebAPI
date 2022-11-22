@@ -32,6 +32,12 @@ namespace ExpensesManager.WebAPI.Controllers
             return Ok(m_TotalExpensesPerCategoryService.GetCategorySum(month, year, category));
         }
 
+        [HttpGet(Name = "GetTotalExpensesSumPerMonth")]
+        public IActionResult GetTotalExpensesSumPerMonth(int month, int year)
+        {
+            return Ok(m_TotalExpensesPerCategoryService.GetTotalExpensesSum(month, year));
+        }
+
         [HttpGet(Name = "GetTotalCategories")]
         public IActionResult GetCategories()
         {
@@ -39,16 +45,15 @@ namespace ExpensesManager.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTotalExpensesPerCategories(DateTime timePeriod)
-        {
-            /// to edit after implemntation of recalculation
+        public IActionResult CreateTotalExpensesPerCategories(DateTime fromDate)
+        {            
             List<ExpenseRecord> currentTotalCategoryExpense = m_ExpenseMapperService.GetMapExpenses();
             var totalExpensesToCreate = currentTotalCategoryExpense
-                .Where(e => (Convert.ToInt32(e.Linked_Month) == timePeriod.Month) && DateTime.Parse(e.Transaction_Date).Year == timePeriod.Year).ToList();
+                .Where(e => (Convert.ToInt32(e.Linked_Month) == fromDate.Month) && DateTime.Parse(e.Transaction_Date).Year == fromDate.Year).ToList();
             
-            var createdTotalExpensesPerCategory = m_TotalExpensesPerCategoryService.CreateTotalExpensesPerCategory(totalExpensesToCreate);
+            var createdTotalExpensesPerCategory = m_TotalExpensesPerCategoryService.CreateTotalExpensesPerCategory(totalExpensesToCreate, fromDate);
 
-            return CreatedAtRoute("GetCategories", new { totalExpensePerCategoryTime = timePeriod }, createdTotalExpensesPerCategory);
+            return CreatedAtRoute("GetCategories", new { totalExpensePerCategoryTime = fromDate }, createdTotalExpensesPerCategory);
         }
 
         [HttpDelete]
@@ -59,6 +64,20 @@ namespace ExpensesManager.WebAPI.Controllers
             if(totalExpensesPerCategoryToDelete != null)
             {
                 m_TotalExpensesPerCategoryService.DeleteExpensePerCategory(totalExpensesPerCategoryToDelete);
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteTotalExpensesPerTimePeriod(DateTime fromDate)
+        {
+            var totalExpensesPerCategoryToDelete = m_TotalExpensesPerCategoryService.GetTotalCategories();
+
+            if (totalExpensesPerCategoryToDelete != null)
+            {
+                m_TotalExpensesPerCategoryService.DeleteAllTotalExpensesPerTimePeriod(fromDate);
                 return Ok();
             }
 

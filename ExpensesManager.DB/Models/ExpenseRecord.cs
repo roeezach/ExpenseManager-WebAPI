@@ -22,5 +22,6 @@ namespace ExpensesManager.DB.Models
         [Required]
         public int User_ID { get; set; }
         public string Linked_Month { get; set; }
+        public string Linked_Year { get; set; }
     }
 }

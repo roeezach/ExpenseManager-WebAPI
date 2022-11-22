@@ -20,6 +20,7 @@ namespace ExpensesManager.DB.Models
         public string Record_Creation_Date { get; set; }
         public string Expense_Description { get; set; }
         public string Linked_Month { get; set; }
+        public string Linked_Year { get; set; }
         public string Category { get; set; }
     }
 }

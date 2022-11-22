@@ -21,7 +21,9 @@ namespace ExpensesManager.DB.Models
         
         [Required]
         public string Linked_Month { get; set; }
-        
+        [Required]
+        public string Linked_Year { get; set; }
+
         [Required]
         public string Expense_Creation_Date { get; set; }
         
@@ -32,6 +34,8 @@ namespace ExpensesManager.DB.Models
         public string Category { get; set; }
         
         [Required]
-        public double Paid_Amount { get; set; }
+        public double Owed_Share { get; set; }
+        [Required]
+        public double Paid_Share { get; set; }
     }
 }

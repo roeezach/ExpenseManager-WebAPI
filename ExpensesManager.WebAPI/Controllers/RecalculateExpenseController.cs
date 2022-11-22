@@ -50,5 +50,13 @@ namespace ExpensesManager.WebAPI.Controllers
             return Ok();
         }
 
+        [HttpDelete(Name = "DeleteRecalculatedExpenseRecord")]
+        public IActionResult DeleteRecalculatedExpenseRecord(int recalculatedExpenseRecordID)
+        {
+            m_RecalculatedExpenseService.DeleteRecalculatedExpenseRecord(recalculatedExpenseRecordID);
+            return Ok();
+        }
+
+
     }
 }
