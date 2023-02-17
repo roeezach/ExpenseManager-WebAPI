@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesManager.WebAPI", "E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesManger.Services", "..\ExpensesManger.Services\ExpensesManger.Services.csproj", "{C5C7FE34-11D6-4DAE-B3F8-04605CBBDD9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpensesManager.DB", "..\ExpensesManager.DB\ExpensesManager.DB.csproj", "{5F6FEC83-7807-4D59-BB3A-0474E4DD5432}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesManager.DB", "..\ExpensesManager.DB\ExpensesManager.DB.csproj", "{5F6FEC83-7807-4D59-BB3A-0474E4DD5432}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{919F0C96-537C-4539-8E8F-6FC88E5F08B7}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

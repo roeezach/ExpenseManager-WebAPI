@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ExpensesManger.Services</name>
+    </assembly>
+    <members>
+        <member name="M:ExpensesManger.Services.BuisnessLogic.Core.Utils.RegexMatcherForgeignCurrency(System.String)">
+            <summary>
+            search for the price amount of online shopping , the bigger number is 999.9, on AliExpress the bank is not providing exchange rate info
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:ExpensesManger.Services.BuisnessLogic.Core.Utils.RegexMatcherMonthToCharge(System.String,System.Int32,System.DateTime)">
+            <summary>
+            search for date pattern in a string and return the relevant month period linked to the expense
+            </summary>
+            <param name="searchItem">string to search in </param>
+            <param name="creditCardChargeDay">charge day of the credit card. i.e - 1, 10 </param>
+            <param name="year">year of the expense</param>
+            <returns></returns>
+        </member>
+        <member name="M:ExpensesManger.Services.BuisnessLogic.Core.Utils.GetUserChargeDay(System.Int32)">
+            <summary>
+            temportay fix to retrive user charge day, till login functionality will be implemnted
+            TODO : Move logic to be stored in DB in users table
+            </summary>
+        </member>
+        <member name="M:ExpensesManger.Services.BuisnessLogic.Core.Utils.GenerateRandomID">
+            <summary>
+            ID generator
+            </summary>
+            <returns>unique random ID</returns>
+        </member>
+        <member name="M:ExpensesManger.Services.BuisnessLogic.Integrations.GetExpensesAPI.GetExpensesResponseProcesser.RecalculateDebitAmount(System.Collections.Generic.List{ExpensesManger.Services.BuisnessLogic.Map.ExpenseMapper},System.DateTime)">
+            <summary>
+            prequisite the SW expenses are saved to DB and we can calculate the total debit amout per category
+            </summary>
+            <param name="mappedDataExpenses"></param>
+            <param name="mapper"></param>
+            <param name="expensesDateTime"></param>
+            <returns>correct value of total amount after relaying on SW API </returns>
+        </member>
+        <member name="M:ExpensesManger.Services.BuisnessLogic.Map.CategoryExpenseMapper.SumCategories(System.Collections.Generic.List{ExpensesManager.DB.Models.ExpenseRecord})">
+            <summary>
+            
+            </summary>
+            <param name="mappedList"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ExpensesManger.Services.BuisnessLogic.Map.CategoryExpenseMapper.AddItemsToExpensesInCategory(ExpensesManager.DB.Models.ExpenseRecord,ExpensesManager.DB.Models.ExpenseRecord,System.String)">
+            <summary>
+            test this functionality after refactor
+            </summary>
+            <param name="candidateExpenseToAdd"></param>
+            <param name="currentExpense"></param>
+            <param name="category"></param>
+        </member>
+        <member name="M:ExpensesManger.Services.BuisnessLogic.Map.ExpenseMapper.MapFile(System.Data.DataTable,ExpensesManger.Services.BuisnessLogic.Map.Common.BankTypes.FileTypes)">
+            <summary>
+            the methods mapping the file into the constant categories
+            </summary>
+            <param name="dataTable">the raw data from the file</param>
+            <param name="fileType"> expenses, movment or other </param>
+            <returns>List with mapped categories </returns>
+        </member>
+    </members>
+</doc>

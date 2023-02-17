@@ -1,9 +1,11 @@
-﻿using ExpensesManager.Services;
-using ExpensesManger.Services;
+﻿using ExpensesManger.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System;
 using ExpensesManager.DB.Models;
+using ExpensesManger.Services.BuisnessLogic.Map;
+using ExpensesManger.Services.BuisnessLogic.Map.Common;
+
 
 namespace ExpensesManager.WebAPI.Controllers
 {
@@ -27,10 +29,10 @@ namespace ExpensesManager.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateMappedExpenses(string fileName)
+        public IActionResult CreateMappedExpenses(string fileName, BankTypes.FileTypes bankType)
         {
             DataTable fileData = m_ExpenseReaderService.GetReadFile(m_ExpenseReaderService.GetPathWithFile(fileName));
-            var mappedExpense = m_ExpenseMapperService.CreateExpenses(fileData, ExpenseMapper.FileTypes.Expenses);
+            var mappedExpense = m_ExpenseMapperService.CreateExpenses(fileData, bankType);
 
             return CreatedAtRoute("GetMappedExpenses" , new { createdFileName = fileName } , mappedExpense);
         }

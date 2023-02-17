@@ -1,7 +1,7 @@
 ﻿using ExpensesManger.Services;
 using ExpensesManager.DB.Models;
 using Microsoft.AspNetCore.Mvc;
-using ExpensesManager.BuisnessLogic.Core;
+using ExpensesManger.Services.BuisnessLogic.Core;
 
 namespace ExpensesManager.WebAPI.Controllers
 {
