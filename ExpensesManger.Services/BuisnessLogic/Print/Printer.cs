@@ -26,7 +26,7 @@ namespace ExpensesManager.BuisnessLogic.Print
         {
             Console.WriteLine("\n unmapped expenses below \n");
 
-            IEnumerable<ExpenseMapper> notMappedCollection = mappedData.Where(item => item.CategoryData.Category == CategoryExpenseMapper.CategoryGroup.NotMappedYet);
+            IEnumerable<ExpenseMapper> notMappedCollection = mappedData.Where(item => item.CategoryData.CategoryKey == "Not Mapped Yet");
 
             foreach (ExpenseMapper unMapItem in notMappedCollection)
             {
@@ -37,7 +37,7 @@ namespace ExpensesManager.BuisnessLogic.Print
             Console.WriteLine($"\n total expense of unmapped data is {notMappedCollection.Sum(x => x.Debit_Amount)}");
 
             Console.WriteLine("\n foreigen currency expenses bellow : \n");
-            IEnumerable<ExpenseMapper> foreignCurrCollection = mappedData.Where(item => item.CategoryData.Category == CategoryExpenseMapper.CategoryGroup.ForeignerCurrency);
+            IEnumerable<ExpenseMapper> foreignCurrCollection = mappedData.Where(item => item.CategoryData.CategoryKey == "ForeignerCurrency");
 
             foreach (ExpenseMapper foreignCurrItem in foreignCurrCollection)
             {

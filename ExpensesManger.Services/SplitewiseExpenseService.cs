@@ -16,6 +16,8 @@ namespace ExpensesManger.Services
         private const string LAST_MONTH_IN_YEAR = "12";
         private const int ONE_YEAR = 1;
         private readonly AppDbContext appDbContext;
+        private readonly ICategoryService m_CategoryService;
+
 
         #endregion
 
@@ -26,11 +28,12 @@ namespace ExpensesManger.Services
         #endregion
 
         #region Ctor
-        public SplitewiseExpenseService(AppDbContext appDbContext)
+        public SplitewiseExpenseService(AppDbContext appDbContext, ICategoryService categoryService)
         {
             this.appDbContext = appDbContext;
             SplitWiseExpenseDO = new SplitwiseExpenses();
             SwRecords = new SwRecords();
+            m_CategoryService = categoryService;
         }
 
         #endregion
@@ -101,6 +104,7 @@ namespace ExpensesManger.Services
             var dateToCharge = DateUtils.RegexMatcherDateToCharge(splitwiseExpenses.Description, DateUtils.GetUserChargeDay(userPaid.User_ID), splitwiseExpenses.Created_At);
 
             List<SwRecords> swRecords = new List<SwRecords>();
+            CategoryExpenseMapper categoryExpenseMapper = new(m_CategoryService);
 
             var swRecordsPaid = new SwRecords()
             {
@@ -116,8 +120,8 @@ namespace ExpensesManger.Services
                 Expense_Description = splitwiseExpenses.Description,
                 Linked_Month = dateToCharge.Month.ToString(),
                 Linked_Year = dateToCharge.Year.ToString(),
-                Category = CategoryExpenseMapper.GetCategoryMapping(splitwiseExpenses.Description).ToString()
             };
+            swRecordsPaid.Category = categoryExpenseMapper.GetCategoryMapping(splitwiseExpenses.Description, swRecordsPaid.SW_User_ID).ToString();
 
 
             dateToCharge = DateUtils.RegexMatcherDateToCharge(splitwiseExpenses.Description, DateUtils.GetUserChargeDay(userOwed.User_ID), splitwiseExpenses.Created_At);
@@ -136,8 +140,9 @@ namespace ExpensesManger.Services
                 Expense_Description = splitwiseExpenses.Description,
                 Linked_Month = dateToCharge.Month.ToString(),                
                 Linked_Year = dateToCharge.Year.ToString(),
-                Category = CategoryExpenseMapper.GetCategoryMapping(splitwiseExpenses.Description).ToString()
             };
+            swRecordsOwed.Category = categoryExpenseMapper.GetCategoryMapping(splitwiseExpenses.Description, swRecordsOwed.SW_User_ID).ToString();
+
 
             swRecords.Add(swRecordsPaid);
             swRecords.Add(swRecordsOwed);

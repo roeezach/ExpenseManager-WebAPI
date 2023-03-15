@@ -5,7 +5,7 @@ namespace ExpensesManager.Integrations.SplitWiseModels
 {
     public class SplitwiseExpense
     {
-        public int ID { get; set; }
+        public long ID { get; set; }
         public int? Group_ID { get; set; }
         public int? Friendship_ID { get; set; }
         public int? Expense_Bundle_ID { get; set; }

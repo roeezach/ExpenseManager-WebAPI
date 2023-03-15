@@ -6,24 +6,27 @@ using ExpensesManager.Services.Map.Models;
 using ExpensesManager.Services.Map.Common;
 using ExpensesManger.Services.BuisnessLogic.Map;
 using ExpensesManager.DB.Models;
+using ExpensesManger.Services.BuisnessLogic.Map.Common;
+using ExpensesManger.Services.BuisnessLogic.Map.ExpenseMappers;
+using ExpensesManger.Services;
 
 namespace ExpensesManager.Services
 {
     public class ExpenseMapper
     {
-        #region Constants
-        private const string MONTHLY_PAYMENT_STRING = "מ - ";
-        #endregion
+        private readonly IServiceProvider _serviceProvider;
 
-        #region Enum
-        
-        public enum FileTypes
+        #region Ctors
+        public ExpenseMapper(IServiceProvider serviceProvider)
         {
-            Expenses,
-            Movements
+            _serviceProvider = serviceProvider;
         }
 
-        #endregion Enum
+        public ExpenseMapper()
+        {
+        } 
+        #endregion
+
 
         #region Properties
         [DataNames("CardInfo")]
@@ -47,7 +50,6 @@ namespace ExpensesManager.Services
         public double ExchangeCommission { get; set; }
 
         public CategoryExpenseMapper CategoryData{ get; set; }
-        //total amount of the card should not be in this layer
         #endregion Properties
 
         #region Public Methods
@@ -57,9 +59,9 @@ namespace ExpensesManager.Services
         /// <param name="dataTable">the raw data from the file</param>
         /// <param name="fileType"> expenses, movment or other </param>
         /// <returns>List with mapped categories </returns>
-        public List<ExpenseMapper> MapFile(DataTable dataTable,FileTypes fileType)
+        public List<ExpenseMapper> MapFile(DataTable dataTable, BankTypes.FileTypes fileType, int userId, IExpenseMapperFactory expenseMapperFactory)
         {
-            NamingColumns(dataTable,fileType);
+            NamingColumns(dataTable,fileType,expenseMapperFactory);
             DataNamesMapper<ExpenseMapper> namesMapper = new DataNamesMapper<ExpenseMapper>();
 
             List<ExpenseMapper>? mappedListWithColumnNames = namesMapper.Map(dataTable).ToList();
@@ -67,12 +69,10 @@ namespace ExpensesManager.Services
 
             foreach (ExpenseMapper? mappedRow in mappedListWithColumnNames)
             {
-                if (!string.IsNullOrEmpty(mappedRow.Expense_Description) && mappedRow.Expense_Description != CategoryExpenseMapper.TITLE_DESCRIPTION)
+                if (!string.IsNullOrEmpty(mappedRow.Expense_Description) && mappedRow.Price_Amount > 0)
                 {
-                    mappedRow.CategoryData = new CategoryExpenseMapper()
-                    {
-                       Category = CategoryExpenseMapper.GetCategoryMapping(mappedRow.Expense_Description)
-                    };
+                    mappedRow.CategoryData = ExpenseMapperFactory.GetMapper<CategoryExpenseMapper>(_serviceProvider);
+                    mappedRow.CategoryData.CategoryKey = mappedRow.CategoryData.GetCategoryMapping(mappedRow.Expense_Description, userId);                    
                     mappedList.Add(mappedRow);
                 }
             }
@@ -85,52 +85,28 @@ namespace ExpensesManager.Services
             List<ExpenseRecord> filteredList = distinctCategoryList.Where(item => item.Price_Amount > 0).ToList();
 
             return filteredList.Where(t => ((t.Transaction_Date == currentExpenseMonth.Month.ToString()) ||
-                                               DateUtils.GetExpenseLinkedMonth(currentExpenseMonth, DateUtils.GetUserChargeDay(userID)) == currentExpenseMonth.Month)).ToList();
+                                               DateUtils.GetExpenseLinkedMonth(currentExpenseMonth, DateUtils.GetUserChargeDay(userID)) == currentExpenseMonth.Month)).Where(user => user.User_ID == userID)
+                                               .ToList();
         }
 
         #endregion Public Methods
-        
+
         #region Private Methods
 
-        private void NamingColumns(DataTable dataTable, FileTypes fileType)
+        private void NamingColumns(DataTable dataTable, BankTypes.FileTypes fileType, IExpenseMapperFactory expenseMapperFactory)
         {
-            if (fileType == FileTypes.Expenses)
-            {
-                dataTable.Columns["Column0"].ColumnName = "CardInfo";
-                dataTable.Columns["Column1"].ColumnName = "TransDate";
-                dataTable.Columns["Column2"].ColumnName = "Desc";
-                dataTable.Columns["Column3"].ColumnName = "Price";
-                dataTable.Columns["Column4"].ColumnName = "Debit";
-                dataTable.Columns["Column5"].ColumnName = "OtherDetails";
-                dataTable.Columns["Column6"].ColumnName = "Curr";
+            ExpenseMapper mapperType = expenseMapperFactory.GetBankMapper(fileType);
 
-                if (ContainColumn(dataTable, "Column7"))
-                    dataTable.Columns["Column7"].ColumnName = "ExchangeDescription";
-            }
-            if (fileType == FileTypes.Movements)
+            if (mapperType is HabinleuimiExpenseMapper habeinlumiMapper)
             {
-                dataTable.Columns["Column0"].ColumnName = "CardInfo";
-                dataTable.Columns["Column1"].ColumnName = "Balance";
-                dataTable.Columns["Column2"].ColumnName = "Date";
-                dataTable.Columns["Column3"].ColumnName = "Credit";
-                dataTable.Columns["Column4"].ColumnName = "Debit";
-                dataTable.Columns["Column5"].ColumnName = "Description";
-                dataTable.Columns["Column6"].ColumnName = "ID";
-                dataTable.Columns["Column7"].ColumnName = "Type";
+                habeinlumiMapper.CustomNamingColumns(dataTable);
+            }
+            else if (mapperType is HapoalimExpenseMapper hapoalimMapper)
+            {
+                hapoalimMapper.CustomNamingColumns(dataTable);
             }
         }
-     
-        private bool ContainColumn(DataTable table, string columnName)
-        {
-            DataColumnCollection columns = table.Columns;
-            if (columns.Contains(columnName))
-            {
-                return true;
-            }
 
-            return false;
-        }
-        
         #endregion
     }
 }

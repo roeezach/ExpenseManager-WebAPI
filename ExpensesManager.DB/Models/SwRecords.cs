@@ -8,7 +8,7 @@ namespace ExpensesManager.DB.Models
         [Required]
         public int Internal_TransactionID { get; set; }
         [Required]
-        public int SW_TransactionID { get; set; }
+        public long SW_TransactionID { get; set; }
         [Required]
         public int SW_User_ID { get; set; }
         [Required]
