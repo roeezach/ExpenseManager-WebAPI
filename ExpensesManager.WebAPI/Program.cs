@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using ExpensesManager.DB;
 using ExpensesManger.Services;
+using ExpensesManger.Services.BuisnessLogic.Map;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>();
@@ -14,9 +16,10 @@ builder.Services.AddDbContext<AppDbContext>();
 builder.Services.AddTransient<IExpenseReaderService, ExpenseReadService> ();
 builder.Services.AddTransient<IExpenseMapperService, ExpenseMapperService>();
 builder.Services.AddTransient<ITotalExpensesPerCategoryService, TotalExpensesPerCategoryService>();
-builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ISplitwiseExpensesService, SplitewiseExpenseService>();
 builder.Services.AddTransient<IRecalculatedExpenseService, RecalculatedExpenseService>();
+builder.Services.AddScoped<IExpenseMapperFactory, ExpenseMapperFactory>();
 
 builder.Services.AddEndpointsApiExplorer();
 

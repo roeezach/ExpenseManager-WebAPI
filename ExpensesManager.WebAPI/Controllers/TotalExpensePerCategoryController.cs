@@ -45,13 +45,13 @@ namespace ExpensesManager.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTotalExpensesPerCategories(DateTime fromDate)
+        public IActionResult CreateTotalExpensesPerCategories(DateTime fromDate, int userID)
         {            
             List<ExpenseRecord> currentTotalCategoryExpense = m_ExpenseMapperService.GetMapExpenses();
             var totalExpensesToCreate = currentTotalCategoryExpense
                 .Where(e => (Convert.ToInt32(e.Linked_Month) == fromDate.Month) && DateTime.Parse(e.Transaction_Date).Year == fromDate.Year).ToList();
             
-            var createdTotalExpensesPerCategory = m_TotalExpensesPerCategoryService.CreateTotalExpensesPerCategory(totalExpensesToCreate, fromDate);
+            var createdTotalExpensesPerCategory = m_TotalExpensesPerCategoryService.CreateTotalExpensesPerCategory(totalExpensesToCreate, fromDate, userID);
 
             return CreatedAtRoute("GetCategories", new { totalExpensePerCategoryTime = fromDate }, createdTotalExpensesPerCategory);
         }
