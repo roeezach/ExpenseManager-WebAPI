@@ -11,7 +11,7 @@ namespace ExpensesManger.Services
         double GetTotalExpensesSum(int month, int year);
         List<TotalExpensePerCategory> GetTotalCategories();
         TotalExpensePerCategory EditTotalExpensePerCategory(TotalExpensePerCategory expensePerCategory, string category, int month, int year);
-        Dictionary<CategoryExpenseMapper.CategoryGroup, List<ExpenseRecord>> CreateTotalExpensesPerCategory(List<ExpenseRecord> montlyExpenses,DateTime fromDate);
+        Dictionary<string, List<ExpenseRecord>> CreateTotalExpensesPerCategory(List<ExpenseRecord> montlyExpenses,DateTime fromDate, int userID);
         void DeleteExpensePerCategory(TotalExpensePerCategory expensePerCategory);
         void DeleteAllTotalExpensesPerTimePeriod(DateTime fromDate);
     }

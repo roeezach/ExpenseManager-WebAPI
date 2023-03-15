@@ -62,7 +62,7 @@ namespace ExpensesManager.BuisnessLogic.Core
 
         public static int GetExpenseLinkedMonth(DateTime expenseDate, int creditCardChargeDay)
         {
-            var returnedMonth = creditCardChargeDay >= expenseDate.Day ? expenseDate.Month - ONE_MONTH : expenseDate.Month;
+            var returnedMonth = creditCardChargeDay > expenseDate.Day ? expenseDate.Month - ONE_MONTH : expenseDate.Month;
             return returnedMonth == INVALID_MONTH ? LAST_MONTH_IN_YEAR : returnedMonth;
         }
 

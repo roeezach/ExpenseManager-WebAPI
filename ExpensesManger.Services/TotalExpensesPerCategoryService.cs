@@ -20,14 +20,16 @@ namespace ExpensesManger.Services
         #region Member
         
         private readonly AppDbContext m_AppDbContext;
+        private readonly ICategoryService m_CategoryService;
 
         #endregion
         
         #region Ctor
 
-        public TotalExpensesPerCategoryService(AppDbContext context)
+        public TotalExpensesPerCategoryService(AppDbContext context,ICategoryService categoryService)
         {
             m_AppDbContext = context;
+            m_CategoryService = categoryService;
         }
 
         #endregion
@@ -78,20 +80,20 @@ namespace ExpensesManger.Services
         /// </summary>
         /// <param name="montlyExpenses"></param>
         /// <returns></returns>
-        public Dictionary<CategoryExpenseMapper.CategoryGroup, List<ExpenseRecord>> CreateTotalExpensesPerCategory(List<ExpenseRecord> montlyExpenses, DateTime fromDate)
+        public Dictionary<string, List<ExpenseRecord>> CreateTotalExpensesPerCategory(List<ExpenseRecord> montlyExpenses, DateTime fromDate,int userID)
         {
-            CategoryExpenseMapper categoryMapper = new CategoryExpenseMapper();
-            Dictionary<CategoryExpenseMapper.CategoryGroup, List<ExpenseRecord>> expensesCategories = categoryMapper.AppendExpenseRecordToCategories(montlyExpenses);
+            CategoryExpenseMapper categoryMapper = new CategoryExpenseMapper(m_CategoryService);
+            Dictionary<string, List<ExpenseRecord>> expensesCategories = categoryMapper.AppendExpenseRecordToCategories(montlyExpenses, userID);
 
-            foreach (KeyValuePair<CategoryExpenseMapper.CategoryGroup, List<ExpenseRecord>> categoryItem in expensesCategories)
+            foreach (KeyValuePair<string, List<ExpenseRecord>> categoryItem in expensesCategories)
             {
                 if (categoryItem.Value.Any())
                 {
-                    var expensePerCategory = CreateExpensePerCategoryForExpenseRecord(categoryItem.Key, categoryItem.Value, fromDate);
+                    var expensePerCategory = CreateExpensePerCategoryForExpenseRecord(categoryItem.Key, categoryItem.Value, fromDate, userID);
                     m_AppDbContext.Add(expensePerCategory);
                     m_AppDbContext.SaveChanges();
                 }
-                var uniqueRecEx = m_AppDbContext.RecalculatedExpenseRecords.Where(item => (item.Category == Enum.GetName<CategoryExpenseMapper.CategoryGroup>(categoryItem.Key)
+                var uniqueRecEx = m_AppDbContext.RecalculatedExpenseRecords.Where(item => (item.Category == (categoryItem.Key)
                                                                                           && categoryItem.Value.Count == NO_ITEMS
                                                                                           && item.Owed_Share > NO_MONEY))
                                                                                           .ToList();
@@ -134,7 +136,7 @@ namespace ExpensesManger.Services
         /// <param name="montlyExpensesInCateogry"></param>
         /// <param name="fromDate"></param>
         /// <returns></returns>
-        private TotalExpensePerCategory CreateExpensePerCategoryForExpenseRecord(CategoryExpenseMapper.CategoryGroup category, List<ExpenseRecord> montlyExpensesInCateogry, DateTime fromDate)
+        private TotalExpensePerCategory CreateExpensePerCategoryForExpenseRecord(string category, List<ExpenseRecord> montlyExpensesInCateogry, DateTime fromDate, int userId)
         {
             IEnumerable<ExpenseRecord> ItemsWithValue = montlyExpensesInCateogry.Where(t => !string.IsNullOrEmpty(t.Transaction_Date));
             DateTime dateOfCategory = ItemsWithValue != null ? DateTime.Parse(ItemsWithValue.FirstOrDefault().Transaction_Date) : DateTime.MinValue;
@@ -142,9 +144,9 @@ namespace ExpensesManger.Services
             TotalExpensePerCategory totalExpensePerCategory = new()
             {
                 ItemID = DateUtils.GenerateRandomID(),
-                Total_Amount = recalculatedExpenses.Any() ? RecalaculatedExpenseCategoriesHandler(recalculatedExpenses, montlyExpensesInCateogry) : montlyExpensesInCateogry.Sum(x => x.Debit_Amount),
+                Total_Amount = recalculatedExpenses.Any() ? RecalaculatedExpenseCategoriesHandler(recalculatedExpenses, montlyExpensesInCateogry,userId) : montlyExpensesInCateogry.Sum(x => x.Debit_Amount),
                 Category = category.ToString(),
-                SW_UserID = LOGGED_IN_USER_ID, //to be changed after Loign and user managment implementation
+                SW_UserID = userId,
                 Month = Convert.ToInt32(montlyExpensesInCateogry.FirstOrDefault().Linked_Month),
                 Year = dateOfCategory.Year
             };
@@ -159,7 +161,7 @@ namespace ExpensesManger.Services
         /// <param name="montlyExpensesInCateogry"></param>
         /// <param name="fromDate"></param>
         /// <returns></returns>
-        private TotalExpensePerCategory CreateTepcForToUniqeRecalculatedExpense(CategoryExpenseMapper.CategoryGroup category, List<RecalculatedExpenseRecord> montlyExpensesInCateogry, DateTime fromDate)
+        private TotalExpensePerCategory CreateTepcForToUniqeRecalculatedExpense(string category, List<RecalculatedExpenseRecord> montlyExpensesInCateogry, DateTime fromDate)
         {
             List<RecalculatedExpenseRecord> recalculatedExpenses = GetRecalculatedExpenseRecordPerCategory(category, fromDate);
 
@@ -170,7 +172,7 @@ namespace ExpensesManger.Services
             {
                 ItemID = DateUtils.GenerateRandomID(),
                 Total_Amount = recalculatedExpensesCurrUser.Sum(x => x.Owed_Share),
-                Category = category.ToString(),
+                Category = category,
                 SW_UserID = LOGGED_IN_USER_ID, //to be changed after Loign and user managment implementation
                 Month = Convert.ToInt32(montlyExpensesInCateogry.FirstOrDefault().Linked_Month),
                 Year = fromDate.Year
@@ -179,19 +181,19 @@ namespace ExpensesManger.Services
             return totalExpensePerCategory;
         }
 
-        private List<RecalculatedExpenseRecord> GetRecalculatedExpenseRecordPerCategory(CategoryExpenseMapper.CategoryGroup category, DateTime fromDate)
+        private List<RecalculatedExpenseRecord> GetRecalculatedExpenseRecordPerCategory(string category, DateTime fromDate)
         {
             return m_AppDbContext.RecalculatedExpenseRecords.Where(rer => rer.Linked_Month == fromDate.Month.ToString()
                                                                                                                         && rer.Linked_Year == fromDate.Year.ToString()
-                                                                                                                        && rer.Category == Enum.GetName<CategoryExpenseMapper.CategoryGroup>(category))
+                                                                                                                        && rer.Category == category)
                                                                                                                         .ToList();
         }
 
-        private double RecalaculatedExpenseCategoriesHandler(List<RecalculatedExpenseRecord> recalculatedExpenseInCurrentCategory, List<ExpenseRecord> montlyExpensesInCateogry)
+        private double RecalaculatedExpenseCategoriesHandler(List<RecalculatedExpenseRecord> recalculatedExpenseInCurrentCategory, List<ExpenseRecord> montlyExpensesInCateogry,int userId)
         {
             double currMonthlyExpensesInCategory = montlyExpensesInCateogry.Sum(x => x.Debit_Amount);
 
-            var recExpCategoryCurrentUser = recalculatedExpenseInCurrentCategory.Where(id => LOGGED_IN_USER_ID == id.SW_UserID);
+            var recExpCategoryCurrentUser = recalculatedExpenseInCurrentCategory.Where(id => id.SW_UserID == userId);
 
             foreach (RecalculatedExpenseRecord recalculatedExpenseRecord in recExpCategoryCurrentUser)
             {

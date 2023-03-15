@@ -4,112 +4,73 @@ using ExpensesManager.Services;
 using ExpensesManager.Services.Map.Models;
 using Newtonsoft.Json;
 using System.Reflection;
+using ExpensesManger.Services;
 
 namespace ExpensesManger.Services.BuisnessLogic.Map
 {
     public class CategoryExpenseMapper
     {
+        #region Constants and Members
         public const string TITLE_DESCRIPTION = "שם  העסק";
+        private const string NOT_MAPPED_YET = "NotMappedYet";
+        private readonly ICategoryService m_CategoryService;
 
-        #region Enum
-        public enum CategoryGroup
+        #endregion
+        #region Ctor
+        public CategoryExpenseMapper(ICategoryService categoryService)
         {
-            Supermarket = 1,
-            Rent,
-            HealthTreatment,
-            Transport,
-            InternetAndTV,
-            NotMappedYet,
-            HouseComitee,
-            Pubs,
-            Resturant,
-            Electricity,
-            Gas,
-            Water,
-            Fines,
-            AtmAndCommissions,
-            Health,
-            Pharm,
-            Parking,
-            ConvenienceStore,
-            Vaction,
-            Movies,
-            Furniture,
-            Gym,
-            DontationMusicAndStroage,
-            ForeignerCurrency,
-            Electronics,
-            Bit,
-            School,
-            MunicipalRate
+            m_CategoryService = categoryService;
         }
-
-        public CategoryGroup Category { get; set; }
-        public List<ExpenseRecord> ExpensesInCategory { get; private set; }
-
 
         #endregion
 
-        
+        #region Properties
+
+        public string CategoryKey { get; set; }
+        public List<ExpenseRecord> ExpensesInCategory { get; private set; }
+        #endregion
         /// <summary>
         /// 
         /// </summary>
         /// <param name="mappedList"></param>
         /// <returns></returns>
-        public Dictionary<CategoryGroup,List<ExpenseRecord>> AppendExpenseRecordToCategories(List<ExpenseRecord> mappedList)
+        public Dictionary<string,List<ExpenseRecord>> AppendExpenseRecordToCategories(List<ExpenseRecord> mappedList, int userId)
         {
-            Dictionary<CategoryGroup, List<ExpenseRecord>> categorisedExpensesDict = new Dictionary<CategoryGroup, List<ExpenseRecord>>();
+            Dictionary<string, List<ExpenseRecord>> categorisedExpensesDict = new Dictionary<string, List<ExpenseRecord>>();
             double categoriesSum = 0;
+            List<MappedCategoryNames> mappedCategories = JsonConvert.DeserializeObject<List<MappedCategoryNames>>(m_CategoryService.GetUserCategories(userId).MappedCategoriesJson);
 
-            foreach (int category in Enum.GetValues(typeof(CategoryGroup)))
+            foreach (MappedCategoryNames category in mappedCategories)
             {
                 ExpensesInCategory = new List<ExpenseRecord>();
-                
+                CategoryKey = category.CategoryName;
+
                 foreach (ExpenseRecord item in mappedList)
                 {
-                    AddItemsToExpensesInCategoryList(item, ((CategoryGroup)category).ToString());
+                    AddItemsToExpensesInCategoryList(item,category.CategoryName);
                 }
 
-                categoriesSum = ExpensesInCategory.Sum(cat => cat.Debit_Amount);
-                if (categoriesSum == 0)// in case no purchase were made for this category
-                        Category = (CategoryGroup)category;
-
-                categorisedExpensesDict.Add((CategoryGroup)category, ExpensesInCategory);
+                categorisedExpensesDict.Add(category.CategoryName, ExpensesInCategory);
             }
 
             return categorisedExpensesDict;
         }
 
-        public static CategoryGroup GetCategoryMapping(string transactionName)
+        public string GetCategoryMapping(string transactionName, int userID)
         {
-            // will replace this with DB call to each user definitions - the list is in the debug folder
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"MappedCategoties.json");
-
-            List<MappedCategoryNames> mappedCategories = JsonConvert.DeserializeObject<List<MappedCategoryNames>>(File.ReadAllText(path));
-
+            List<MappedCategoryNames> mappedCategories = JsonConvert.DeserializeObject<List<MappedCategoryNames>>(m_CategoryService.GetUserCategories(userID).MappedCategoriesJson);
+        
             foreach (MappedCategoryNames mappedCategory in mappedCategories)
             {
-                bool isKeyWordFound = mappedCategory.Keywords.Any(name => transactionName.Contains(name));
+                bool isKeyWordFound = mappedCategory.Keywords.Any(name => transactionName.Replace(" ", "").Contains(name));
 
                 if (isKeyWordFound)
                 {
-                    return (CategoryGroup)Enum.Parse(typeof(CategoryGroup), mappedCategory.CategoryName);
+                    return mappedCategory.CategoryName;
                 }
             }
 
-            return CategoryGroup.NotMappedYet;
-        }
-
-        public List<ExpenseMapper> MapListToCategories(List<ExpenseMapper> mappedExpenses)
-        {
-            foreach (ExpenseMapper mappedRow in mappedExpenses)
-            {
-                if (!string.IsNullOrEmpty(mappedRow.Expense_Description) && mappedRow.Expense_Description != TITLE_DESCRIPTION)
-                    Category = GetCategoryMapping(mappedRow.Expense_Description);
-            }
-
-            return mappedExpenses;
-
+            return NOT_MAPPED_YET;
         }
 
         #region Private Method

@@ -11,7 +11,7 @@ namespace ExpensesManager.DB.Models
         public int ExpenseRecord_TransactionID { get; set; }
         
         [Required]
-        public int SW_TransactionID { get; set; }
+        public long SW_TransactionID { get; set; }
         
         [Required]
         public int SW_UserID { get; set; }
