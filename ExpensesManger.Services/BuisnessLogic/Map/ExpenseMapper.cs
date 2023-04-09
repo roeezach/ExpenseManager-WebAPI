@@ -30,23 +30,35 @@ namespace ExpensesManager.Services
 
         #region Properties
         [DataNames("CardInfo")]
-        public string Card_Details { get; set; }
+        public string CardDetails { get; set; }
+       
         [DataNames("TransDate")]
-        public DateTime? Transaction_Date { get; set; }
+        public DateTime? TransactionDate { get; set; }
+        
         [DataNames("Desc")]
-        public string Expense_Description { get; set; }
+        public string ExpenseDescription { get; set; }
+        
         [DataNames("Price")]
-        public double Price_Amount { get; set; }
+        public double PriceAmount { get; set; }
+        
         [DataNames("Debit")]
-        public double Debit_Amount { get; set; }
-        [DataNames("OtherDetails")]
-        public string AdditionalDetails { get; set; }
-        [DataNames("Curr")]
-        public string Currency { get; set; }
-        public double Exchange_Rate { get; set; }
-        [DataNames("ExchangeDescription")]
-        public string Exchange_Description { get; set; }
+        public double DebitAmount { get; set; }
 
+
+        [DataNames("ForegnierDebitAmount")]
+        public string ForegnierDebitAmount { get; set; }
+
+        [DataNames("DebitCurrency")]
+        public string DebitCurrency { get; set; }
+
+        [DataNames("PriceCurrency")]
+        public string PriceCurrency { get; set; }
+        
+        [DataNames("ExchangeDescription")]
+        public string ExchangeDescription { get; set; }
+
+        public double ExchangeRate { get; set; }
+        
         public double ExchangeCommission { get; set; }
 
         public CategoryExpenseMapper CategoryData{ get; set; }
@@ -69,24 +81,22 @@ namespace ExpensesManager.Services
 
             foreach (ExpenseMapper? mappedRow in mappedListWithColumnNames)
             {
-                if (!string.IsNullOrEmpty(mappedRow.Expense_Description) && mappedRow.Price_Amount > 0)
+                if (!string.IsNullOrEmpty(mappedRow.ExpenseDescription) && mappedRow.PriceAmount > 0)
                 {
                     mappedRow.CategoryData = ExpenseMapperFactory.GetMapper<CategoryExpenseMapper>(_serviceProvider);
-                    mappedRow.CategoryData.CategoryKey = mappedRow.CategoryData.GetCategoryMapping(mappedRow.Expense_Description, userId);                    
+                    mappedRow.CategoryData.CategoryKey = mappedRow.CategoryData.GetCategoryMapping(mappedRow.ExpenseDescription, userId);                    
                     mappedList.Add(mappedRow);
                 }
             }
 
             return mappedList;  
         }
-       
-        public List<ExpenseRecord> GetExpensesPerMonth(List<ExpenseRecord> distinctCategoryList,DateTime currentExpenseMonth, int userID)
+
+        public List<ExpenseRecord> GetExpensesPerMonth(List<ExpenseRecord> distinctCategoryList, int currentExpenseChargeDate, int userID)
         {
             List<ExpenseRecord> filteredList = distinctCategoryList.Where(item => item.Price_Amount > 0).ToList();
 
-            return filteredList.Where(t => ((t.Transaction_Date == currentExpenseMonth.Month.ToString()) ||
-                                               DateUtils.GetExpenseLinkedMonth(currentExpenseMonth, DateUtils.GetUserChargeDay(userID)) == currentExpenseMonth.Month)).Where(user => user.User_ID == userID)
-                                               .ToList();
+            return filteredList.Where(er => er.Linked_Month == currentExpenseChargeDate.ToString() && er.User_ID == userID).ToList();
         }
 
         #endregion Public Methods
@@ -104,6 +114,10 @@ namespace ExpensesManager.Services
             else if (mapperType is HapoalimExpenseMapper hapoalimMapper)
             {
                 hapoalimMapper.CustomNamingColumns(dataTable);
+            }
+            else if (mapperType is MaxExpenseMapper maxMapper)
+            {
+                maxMapper.CustomNamingColumns(dataTable);
             }
         }
 

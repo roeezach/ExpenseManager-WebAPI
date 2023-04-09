@@ -16,6 +16,7 @@ namespace ExpensesManger.Services.BuisnessLogic.Map
         private readonly ICategoryService m_CategoryService;
 
         #endregion
+
         #region Ctor
         public CategoryExpenseMapper(ICategoryService categoryService)
         {
@@ -37,9 +38,7 @@ namespace ExpensesManger.Services.BuisnessLogic.Map
         public Dictionary<string,List<ExpenseRecord>> AppendExpenseRecordToCategories(List<ExpenseRecord> mappedList, int userId)
         {
             Dictionary<string, List<ExpenseRecord>> categorisedExpensesDict = new Dictionary<string, List<ExpenseRecord>>();
-            double categoriesSum = 0;
-            List<MappedCategoryNames> mappedCategories = JsonConvert.DeserializeObject<List<MappedCategoryNames>>(m_CategoryService.GetUserCategories(userId).MappedCategoriesJson);
-
+            List<MappedCategoryNames>? mappedCategories = JsonConvert.DeserializeObject<List<MappedCategoryNames>>(m_CategoryService.GetUserCategories(userId).MappedCategoriesJson);
             foreach (MappedCategoryNames category in mappedCategories)
             {
                 ExpensesInCategory = new List<ExpenseRecord>();
@@ -47,9 +46,8 @@ namespace ExpensesManger.Services.BuisnessLogic.Map
 
                 foreach (ExpenseRecord item in mappedList)
                 {
-                    AddItemsToExpensesInCategoryList(item,category.CategoryName);
+                    AddItemsToExpensesInCategoryList(item,category.CategoryName,userId);
                 }
-
                 categorisedExpensesDict.Add(category.CategoryName, ExpensesInCategory);
             }
 
@@ -58,11 +56,11 @@ namespace ExpensesManger.Services.BuisnessLogic.Map
 
         public string GetCategoryMapping(string transactionName, int userID)
         {
-            List<MappedCategoryNames> mappedCategories = JsonConvert.DeserializeObject<List<MappedCategoryNames>>(m_CategoryService.GetUserCategories(userID).MappedCategoriesJson);
+            List<MappedCategoryNames>? mappedCategories = JsonConvert.DeserializeObject<List<MappedCategoryNames>>(m_CategoryService.GetUserCategories(userID).MappedCategoriesJson);
         
             foreach (MappedCategoryNames mappedCategory in mappedCategories)
             {
-                bool isKeyWordFound = mappedCategory.Keywords.Any(name => transactionName.Replace(" ", "").Contains(name));
+                bool isKeyWordFound = mappedCategory.Keywords.Any(name => transactionName.Replace(" ", "").ToLower().Contains(name.ToLower()));
 
                 if (isKeyWordFound)
                 {
@@ -81,20 +79,20 @@ namespace ExpensesManger.Services.BuisnessLogic.Map
         /// <param name="createdExpense"></param>
         /// <param name="currentExpense"></param>
         /// <param name="category"></param>
-        private void AddItemsToExpensesInCategoryList(ExpenseRecord currentExpense, string category)
+        private void AddItemsToExpensesInCategoryList(ExpenseRecord currentExpense, string category, int userID)
         {
             bool isForeignTransaction = false;
             ExpenseRecord createdExpense = new();
 
 
-            if (currentExpense.Category == category &&!string.IsNullOrEmpty(currentExpense.Expense_Description) && currentExpense.Expense_Description != TITLE_DESCRIPTION)
+            if (currentExpense.Category == category && currentExpense.Debit_Amount > 0 && currentExpense.User_ID == userID)
             {
                 if (string.IsNullOrEmpty(createdExpense.Expense_Description))
                 {
                     createdExpense.Category = currentExpense.Category;
                     createdExpense.Expense_Description = currentExpense.Expense_Description;
                     createdExpense.Transaction_Date= currentExpense.Transaction_Date;
-                    createdExpense.Currency = currentExpense.Currency;
+                    createdExpense.DebitCurrency = currentExpense.DebitCurrency;
                     createdExpense.Record_Create_Date = createdExpense.Record_Create_Date;
                     createdExpense.User_ID = currentExpense.User_ID;
                     createdExpense.Linked_Month = currentExpense.Linked_Month;
@@ -105,7 +103,9 @@ namespace ExpensesManger.Services.BuisnessLogic.Map
                     isForeignTransaction = true;
                     createdExpense.Price_Amount = currentExpense.Price_Amount.Value;
                     createdExpense.Debit_Amount = currentExpense.Price_Amount.Value;
-                    createdExpense.Exchange_Rate = DateUtils.RegexMatcherForgeignCurrency(currentExpense.Expense_Description);
+                    createdExpense.Exchange_Rate = Utils.RegexMatcherForgeignCurrency(currentExpense.Expense_Description);
+                    createdExpense.PriceCurrency = currentExpense.PriceCurrency;
+                    createdExpense.Exchange_Description = Utils.ReformatHebrewString(createdExpense.Exchange_Description);
                 }
 
                 if (!isForeignTransaction)

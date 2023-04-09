@@ -22,6 +22,8 @@ namespace ExpensesManger.Services.BuisnessLogic.Map
                     return new HabinleuimiExpenseMapper();
                 case BankTypes.FileTypes.Hapoalim:
                     return new HapoalimExpenseMapper();
+                case BankTypes.FileTypes.Max:
+                    return new MaxExpenseMapper();
                 default:
                     throw new NotSupportedException("Invalid bank type.");
             }

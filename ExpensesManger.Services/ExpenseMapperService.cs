@@ -43,9 +43,11 @@ namespace ExpensesManger.Services
             return m_AppDbContext.Expenses.ToList();
         }
 
-        public void DeleteExpenses(DateTime currentExpenseMonth, int userID)
+        public void DeleteExpenses(int currentExpenseMonth,int currentExpenseYear, int userID)
         {
             var expensesPerMonth = Mapper.GetExpensesPerMonth(m_AppDbContext.Expenses.ToList(), currentExpenseMonth, userID);
+            expensesPerMonth = expensesPerMonth.Where(e => e.Linked_Year == currentExpenseYear.ToString()).ToList();
+
             foreach (var expense in expensesPerMonth)
             {
                 m_AppDbContext.Remove(expense);
@@ -53,13 +55,13 @@ namespace ExpensesManger.Services
             }
         }
 
-        public List<ExpenseRecord> CreateExpenses(DataTable dataTable, BankTypes.FileTypes fileType,int userID)
+        public List<ExpenseRecord> CreateExpenses(DataTable dataTable, BankTypes.FileTypes fileType,int userID, DateTime ChargeDate)
         {
             List<ExpenseMapper>? mappedExpenses = Mapper.MapFile(dataTable, fileType,userID, m_ExpenseMapperFactory);
 
             foreach (var expense in mappedExpenses)
             {
-                m_AppDbContext.Add(SetExpenseMapperToExpenseRecord(expense, userID));
+                m_AppDbContext.Add(SetExpenseMapperToExpenseRecord(expense, userID, ChargeDate));
                 m_AppDbContext.SaveChanges();
             }
 
@@ -80,27 +82,34 @@ namespace ExpensesManger.Services
 
         #region Internal Methods
 
-        internal static ExpenseRecord SetExpenseMapperToExpenseRecord(ExpenseMapper expenseMapper, int userID)
+        internal static ExpenseRecord SetExpenseMapperToExpenseRecord(ExpenseMapper expenseMapper, int userID,DateTime chargedDate)
         {
-            string month = DateUtils.GetExpenseLinkedMonth(expenseMapper.Transaction_Date.Value, DateUtils.GetUserChargeDay(userID)).ToString();
+            string month = Utils.GetExpenseLinkedMonth(expenseMapper.TransactionDate.Value, chargedDate).ToString();
+            string? exchangeDescription = Utils.ReformatHebrewString(expenseMapper.ExchangeDescription);
 
             ExpenseRecord expenseRecord =  new()
             {
-                TransactionID = DateUtils.GenerateRandomID(),
-                Transaction_Date = expenseMapper.Transaction_Date.ToString(),
-                Card_Details = expenseMapper.Card_Details,
+                TransactionID = Utils.GenerateRandomID(),
+                Transaction_Date = expenseMapper.TransactionDate.ToString(),
+                Card_Details = expenseMapper.CardDetails,
                 Record_Create_Date = DateTime.Now.ToString(),
-                Expense_Description = expenseMapper.Expense_Description,
-                Price_Amount = expenseMapper.Price_Amount,
-                Debit_Amount = expenseMapper.Debit_Amount,
-                Currency = expenseMapper.Currency,
-                Exchange_Rate = expenseMapper.Exchange_Rate,
-                Exchange_Description = expenseMapper.Exchange_Description,
+                Expense_Description = expenseMapper.ExpenseDescription,
+                Price_Amount = expenseMapper.PriceAmount,
+                Debit_Amount = expenseMapper.DebitAmount,
+                DebitCurrency = expenseMapper.DebitCurrency,
+                Exchange_Rate = expenseMapper.ExchangeRate,
+                Exchange_Description = exchangeDescription,
                 Category = expenseMapper.CategoryData.CategoryKey,
                 Linked_Month = month,
                 User_ID = userID,
-                Linked_Year = DateUtils.GetExpenseLinkedYearAsDateTime(expenseMapper.Transaction_Date.Value, DateUtils.GetUserChargeDay(userID), Convert.ToInt32(month)).Year.ToString()
+                Linked_Year = Utils.GetExpenseLinkedYearAsDateTime(expenseMapper.TransactionDate.Value, Utils.GetUserChargeDay(userID), Convert.ToInt32(month)).Year.ToString()
         };
+
+            if(!string.IsNullOrEmpty(expenseMapper.ExchangeDescription))
+            {
+                expenseRecord.Debit_Amount = double.Parse(expenseMapper.ForegnierDebitAmount);
+                expenseRecord.Exchange_Rate = Utils.GetExchangeRate(exchangeDescription);
+            }
 
             return expenseRecord;
         } 

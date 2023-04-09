@@ -28,18 +28,18 @@ namespace ExpensesManager.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateMappedExpenses(string fileName, BankTypes.FileTypes fileType,int userID)
+        public IActionResult CreateMappedExpenses(string fileName, BankTypes.FileTypes fileType,int userID, DateTime chargedDate)
         {
             DataTable fileData = m_ExpenseReaderService.GetReadFile(m_ExpenseReaderService.GetPathWithFile(fileName));
-            var mappedExpense = m_ExpenseMapperService.CreateExpenses(fileData, fileType, userID);
+            var mappedExpense = m_ExpenseMapperService.CreateExpenses(fileData, fileType, userID, chargedDate );
 
             return CreatedAtRoute("GetMappedExpenses" , new { createdFileName = fileName } , mappedExpense);
         }
 
         [HttpDelete]
-        public IActionResult DeleteMappedExpenses(DateTime linkedMonth, int userID)
+        public IActionResult DeleteMappedExpenses(int linkedMonth,int linkedYear, int userID)
         {            
-            m_ExpenseMapperService.DeleteExpenses(linkedMonth, userID);
+            m_ExpenseMapperService.DeleteExpenses(linkedMonth, linkedYear, userID);
             return Ok();
         }
 

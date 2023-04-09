@@ -7,6 +7,7 @@ namespace ExpensesManger.Services.BuisnessLogic.Map.Common
         {
             Habinleuimi,
             Hapoalim,
+            Max,
         }
     }
 }
