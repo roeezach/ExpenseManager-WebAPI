@@ -21,21 +21,21 @@ namespace ExpensesManager.WebAPI.Controllers
         }
 
         [HttpGet("{month:int}/{year:int}",Name = "GetCategoriesSumPerTimePeriod")]
-        public IActionResult GetCategoriesSumPerTimePeriod(int month, int year)
+        public IActionResult GetCategoriesSumPerTimePeriod(int month, int year,int userID)
         {
-            return Ok(m_TotalExpensesPerCategoryService.GetCategoriesSum(month, year));
+            return Ok(m_TotalExpensesPerCategoryService.GetCategoriesSum(month, year, userID));
         }
 
         [HttpGet("{category}/{month:int}/{year:int}",Name = "GetCategoriesSum")]
-        public IActionResult GetCategoriesSum(int month, int year, string category)
+        public IActionResult GetCategoriesSum(int month, int year, string category, int userID)
         {
-            return Ok(m_TotalExpensesPerCategoryService.GetCategorySum(month, year, category));
+            return Ok(m_TotalExpensesPerCategoryService.GetCategorySum(month, year, category, userID));
         }
 
         [HttpGet(Name = "GetTotalExpensesSumPerMonth")]
-        public IActionResult GetTotalExpensesSumPerMonth(int month, int year)
+        public IActionResult GetTotalExpensesSumPerMonth(int month, int year, int userID)
         {
-            return Ok(m_TotalExpensesPerCategoryService.GetTotalExpensesSum(month, year));
+            return Ok(m_TotalExpensesPerCategoryService.GetTotalExpensesSum(month, year, userID));
         }
 
         [HttpGet(Name = "GetTotalCategories")]
@@ -57,10 +57,10 @@ namespace ExpensesManager.WebAPI.Controllers
         }
 
         [HttpDelete]
-        public IActionResult DeleteTotalExpensePerCategory(DateTime timePeriod, string catrgory)
+        public IActionResult DeleteTotalExpensePerCategory(DateTime timePeriod, string catrgory, int userID)
         {
             var totalExpensesPerCategoryToDelete = m_TotalExpensesPerCategoryService.GetTotalCategories().FirstOrDefault(e => (Convert.ToInt32(e.Month) == timePeriod.Month) 
-                                                                                       && e.Year == timePeriod.Year && e.Category == catrgory);
+                                                                                       && e.Year == timePeriod.Year && e.Category == catrgory && e.SW_UserID == userID);
             if(totalExpensesPerCategoryToDelete != null)
             {
                 m_TotalExpensesPerCategoryService.DeleteExpensePerCategory(totalExpensesPerCategoryToDelete);
@@ -71,13 +71,13 @@ namespace ExpensesManager.WebAPI.Controllers
         }
 
         [HttpDelete]
-        public IActionResult DeleteTotalExpensesPerTimePeriod(DateTime fromDate)
+        public IActionResult DeleteTotalExpensesPerTimePeriod(DateTime fromDate, int userId)
         {
             var totalExpensesPerCategoryToDelete = m_TotalExpensesPerCategoryService.GetTotalCategories();
 
             if (totalExpensesPerCategoryToDelete != null)
             {
-                m_TotalExpensesPerCategoryService.DeleteAllTotalExpensesPerTimePeriod(fromDate);
+                m_TotalExpensesPerCategoryService.DeleteAllTotalExpensesPerTimePeriod(fromDate,userId);
                 return Ok();
             }
 

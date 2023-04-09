@@ -6,24 +6,26 @@ namespace ExpensesManger.Services.BuisnessLogic.Map.ExpenseMappers
 {
     public class HapoalimExpenseMapper : ExpenseMapper
     {
+        #region Properties
+
         [DataNames("CardInfo")]
         public string Card_Details { get; set; }
-        
+
         [DataNames("TransDate")]
         public DateTime? Transaction_Date { get; set; }
-        
+
         [DataNames("ChargedMonth")]
         public DateTime? ChargedMonth { get; set; }
-        
+
         [DataNames("Desc")]
         public string Expense_Description { get; set; }
-        
+
         [DataNames("Price")]
         public double Price_Amount { get; set; }
-        
+
         [DataNames("Debit")]
         public double Debit_Amount { get; set; }
-        
+
         [DataNames("TransactionID")]
         public int TransactionID { get; set; }
 
@@ -31,13 +33,13 @@ namespace ExpensesManger.Services.BuisnessLogic.Map.ExpenseMappers
         public double DiscountAmount { get; set; }
 
         [DataNames("DiscountPrecentage")]
-        public double DiscountPrecentage{ get; set; }
-        
+        public double DiscountPrecentage { get; set; }
+
         [DataNames("AttachedToIndex")]
         public string AttachedToIndex { get; set; }
 
         [DataNames("BaseRate")]
-        public string BaseRate{ get; set; }
+        public string BaseRate { get; set; }
 
 
         [DataNames("BaseRateForCharging")]
@@ -50,6 +52,7 @@ namespace ExpensesManger.Services.BuisnessLogic.Map.ExpenseMappers
         [DataNames("OtherDetails")]
         public string AdditionalDetails { get; set; }
 
+        #endregion
 
         public DataTable CustomNamingColumns(DataTable dataTable)
         {

@@ -28,6 +28,7 @@ namespace ExpensesManger.Services
         }
 
         #endregion
+
         #region IRecalculatedExpenseService Methods
 
         /// <summary>
@@ -126,7 +127,7 @@ namespace ExpensesManger.Services
 
             recalculatedExpenseRecord = new RecalculatedExpenseRecord()
             {
-                Recalculated_Expense_Record_Trans_ID = DateUtils.GenerateRandomID(),
+                Recalculated_Expense_Record_Trans_ID = Utils.GenerateRandomID(),
                 SW_TransactionID = swRecord.SW_TransactionID,
                 SW_UserID = swRecord.SW_User_ID,
                 Expense_Description = swRecord.Expense_Description,
@@ -157,7 +158,7 @@ namespace ExpensesManger.Services
             else
             {
 
-                recalculatedExpenseRecord.ExpenseRecord_TransactionID = DateUtils.GenerateRandomID();
+                recalculatedExpenseRecord.ExpenseRecord_TransactionID = Utils.GenerateRandomID();
                 recalculatedExpenseRecord.Expense_Creation_Date = new DateTime(Convert.ToInt32(swRecord.Linked_Year), Convert.ToInt32(swRecord.Linked_Month), DEFAULT_DAY).ToString();
                 recalculatedExpenseRecord.Category = swRecord.Category;
             }
