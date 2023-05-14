@@ -4,7 +4,7 @@ using ExpensesManager.Services;
 using ExpensesManager.Services.Map.Models;
 using Newtonsoft.Json;
 using System.Reflection;
-using ExpensesManger.Services;
+using ExpensesManger.Services.Contracts;
 
 namespace ExpensesManger.Services.BuisnessLogic.Map
 {

@@ -1,5 +1,4 @@
-﻿
-namespace ExpensesManger.Services
+﻿namespace ExpensesManger.Services.Services
 {
     public static class ServiceFactory
     {

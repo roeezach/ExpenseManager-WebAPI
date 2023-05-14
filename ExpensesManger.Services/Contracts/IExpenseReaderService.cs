@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace ExpensesManger.Services
+namespace ExpensesManger.Services.Contracts
 {
     public interface IExpenseReaderService
     {
@@ -9,7 +9,7 @@ namespace ExpensesManger.Services
         string CreatePathForFiles();
         string GetPathWithFile(string fileName);
         public string GetDefaultFilePath();
-        string EditPathWithFiles(string newPath,string fileName);
+        string EditPathWithFiles(string newPath, string fileName);
         void DeletePathWithoutFiles();
     }
 }

@@ -2,6 +2,7 @@
 using ExpensesManager.Services;
 using ExpensesManger.Services.BuisnessLogic.Map.Common;
 using ExpensesManger.Services.BuisnessLogic.Map.ExpenseMappers;
+using ExpensesManger.Services.Contracts;
 
 namespace ExpensesManger.Services.BuisnessLogic.Map
 {

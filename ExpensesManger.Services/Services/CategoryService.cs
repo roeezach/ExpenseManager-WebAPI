@@ -1,7 +1,8 @@
 ﻿using ExpensesManager.DB;
 using ExpensesManager.DB.Models;
+using ExpensesManger.Services.Contracts;
 
-namespace ExpensesManger.Services
+namespace ExpensesManger.Services.Services
 {
     public class CategoryService : ICategoryService
     {

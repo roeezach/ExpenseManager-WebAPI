@@ -1,14 +1,15 @@
 ﻿using ExpensesManager.DB;
 using ExpensesManager.Services;
+using ExpensesManger.Services.Contracts;
 using System.Data;
 
-namespace ExpensesManger.Services
+namespace ExpensesManger.Services.Services
 {
     public class ExpenseReadService : IExpenseReaderService
     {
         private const string FILES_FOLDER_PREFIX = $"ExpenseFileByMonth";
         private readonly AppDbContext appDbContext;
-        public ExpenseReader Reader { get;set; }
+        public ExpenseReader Reader { get; set; }
         public ExpenseReadService(AppDbContext context)
         {
             appDbContext = context;
@@ -25,10 +26,10 @@ namespace ExpensesManger.Services
 
             return filePath;
         }
-        
+
         public void DeletePathWithoutFiles()
-        {            
-            Directory.Delete(GetDefaultFilePath());      
+        {
+            Directory.Delete(GetDefaultFilePath());
         }
 
         public string EditPathWithFiles(string newPath, string fileName)
@@ -37,7 +38,7 @@ namespace ExpensesManger.Services
             string? editedPath = currentPath.Replace(currentPath, newPath);
             return string.Join(editedPath, $"{fileName}.xls");
         }
-        
+
         public string GetPathWithFile(string fileName)
         {
             string filePath = GetDefaultFilePath();
@@ -61,6 +62,6 @@ namespace ExpensesManger.Services
         public DataTable GetReadFile(string path)
         {
             return Reader.ReadFile(path);
-        }        
+        }
     }
 }

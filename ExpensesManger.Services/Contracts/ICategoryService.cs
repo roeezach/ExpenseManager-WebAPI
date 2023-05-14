@@ -2,7 +2,7 @@
 using ExpensesManager.Services;
 using ExpensesManger.Services.BuisnessLogic.Map;
 
-namespace ExpensesManger.Services
+namespace ExpensesManger.Services.Contracts
 {
     public interface ICategoryService
     {
