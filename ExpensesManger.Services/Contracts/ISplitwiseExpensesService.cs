@@ -1,7 +1,7 @@
 ﻿
 using ExpensesManager.DB.Models;
 
-namespace ExpensesManger.Services
+namespace ExpensesManger.Services.Contracts
 {
     public interface ISplitwiseExpensesService
     {

@@ -4,9 +4,10 @@ using ExpensesManager.DB.Models;
 using ExpensesManager.Integrations.GetExpensesAPI;
 using ExpensesManager.Integrations.SplitWiseModels;
 using ExpensesManger.Services.BuisnessLogic.Map;
+using ExpensesManger.Services.Contracts;
 using Users = ExpensesManager.Integrations.SplitWiseModels.Users;
 
-namespace ExpensesManger.Services
+namespace ExpensesManger.Services.Services
 {
     public class SplitewiseExpenseService : ISplitwiseExpensesService
     {
@@ -61,7 +62,7 @@ namespace ExpensesManger.Services
             foreach (SplitwiseExpense expense in splitwiseExpenses.Expenses)
             {
                 var existingExpense = existingSwRecordsAtMonth.Where(item => item.Expense_Description == expense.Description).ToList();
-                if(!existingExpense.Any())
+                if (!existingExpense.Any())
                 {
                     swRecordItems.AddRange(ParseSwExpenseToSwRecords(expense));
                 }
@@ -87,7 +88,7 @@ namespace ExpensesManger.Services
         }
 
         #endregion
-        
+
         #region Private Methods
         private SplitwiseExpenses CallingSplitwiseGetExpensesApi(DateTime fromDate)
         {
@@ -137,15 +138,15 @@ namespace ExpensesManger.Services
             {
                 Internal_TransactionID = Utils.GenerateRandomID(),
                 SW_TransactionID = splitwiseExpenses.ID,
-                SW_User_ID = (userOwed == null) ? INVALID_DIGIT : userOwed.User_ID,
+                SW_User_ID = userOwed == null ? INVALID_DIGIT : userOwed.User_ID,
                 Total_Cost = Convert.ToDouble(splitwiseExpenses.Cost),
                 Creation_Method = splitwiseExpenses.Creation_Method,
-                Paid_Share = (userOwed == null) ? INVALID_DIGIT : Convert.ToDouble(userOwed.Paid_Share),
-                Owed_Share = (userOwed == null) ? INVALID_DIGIT : Convert.ToDouble(userOwed.Owed_Share),
+                Paid_Share = userOwed == null ? INVALID_DIGIT : Convert.ToDouble(userOwed.Paid_Share),
+                Owed_Share = userOwed == null ? INVALID_DIGIT : Convert.ToDouble(userOwed.Owed_Share),
                 Expense_Creation_Date = splitwiseExpenses.Created_At.ToString(),
                 Record_Creation_Date = DateTime.Now.ToString(),
                 Expense_Description = splitwiseExpenses.Description,
-                Linked_Month = dateToCharge.Month.ToString(),                
+                Linked_Month = dateToCharge.Month.ToString(),
                 Linked_Year = dateToCharge.Year.ToString(),
             };
             swRecordsOwed.Category = categoryExpenseMapper.GetCategoryMapping(splitwiseExpenses.Description, swRecordsOwed.SW_User_ID).ToString();
@@ -155,7 +156,7 @@ namespace ExpensesManger.Services
             swRecords.Add(swRecordsOwed);
 
             return swRecords;
-        } 
+        }
         #endregion
     }
 }

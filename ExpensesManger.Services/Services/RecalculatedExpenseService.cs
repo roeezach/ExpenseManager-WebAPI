@@ -1,30 +1,30 @@
 ﻿using ExpensesManager.BuisnessLogic.Core;
 using ExpensesManager.DB;
 using ExpensesManager.DB.Models;
+using ExpensesManger.Services.Contracts;
 
-
-namespace ExpensesManger.Services
+namespace ExpensesManger.Services.Services
 {
     public class RecalculatedExpenseService : IRecalculatedExpenseService
     {
         #region Const
-        
+
         private const int DEFAULT_DAY = 1;
         private const int LOGGED_IN_USER_ID = 19773792;
 
         #endregion
 
         #region Member
-        
+
         private readonly AppDbContext m_AppDbContext;
 
         #endregion
-        
+
         #region Ctor
 
         public RecalculatedExpenseService(AppDbContext appDbContext)
         {
-            this.m_AppDbContext = appDbContext;
+            m_AppDbContext = appDbContext;
         }
 
         #endregion
@@ -118,7 +118,7 @@ namespace ExpensesManger.Services
         #endregion
 
         #region Private Methods
-        
+
         private RecalculatedExpenseRecord CreateNewRecalculatedExpenseItems(List<ExpenseRecord> expensesInCategory, SwRecords swRecord)
         {
             ExpenseRecord expenseItemToRecalculate = new ExpenseRecord();

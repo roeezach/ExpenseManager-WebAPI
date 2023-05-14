@@ -6,8 +6,9 @@ using ExpensesManager.DB.Models;
 using ExpensesManager.BuisnessLogic.Core;
 using ExpensesManger.Services.BuisnessLogic.Map;
 using ExpensesManger.Services.BuisnessLogic.Map.Common;
+using ExpensesManger.Services.Contracts;
 
-namespace ExpensesManger.Services
+namespace ExpensesManger.Services.Services
 {
     public class ExpenseMapperService : IExpenseMapperService
     {
@@ -20,11 +21,11 @@ namespace ExpensesManger.Services
 
         #endregion
         public ExpenseMapper Mapper { get; private set; }
-        public CategoryExpenseMapper CategoryExpense{ get; set; }
+        public CategoryExpenseMapper CategoryExpense { get; set; }
 
         #region Ctor
 
-        public ExpenseMapperService(AppDbContext context, ICategoryService categoryService,IExpenseMapperFactory expenseMapperFactory, IServiceProvider serviceProvider)
+        public ExpenseMapperService(AppDbContext context, ICategoryService categoryService, IExpenseMapperFactory expenseMapperFactory, IServiceProvider serviceProvider)
         {
             m_AppDbContext = context;
             m_ExpenseMapperFactory = expenseMapperFactory;
@@ -43,7 +44,7 @@ namespace ExpensesManger.Services
             return m_AppDbContext.Expenses.ToList();
         }
 
-        public void DeleteExpenses(int currentExpenseMonth,int currentExpenseYear, int userID)
+        public void DeleteExpenses(int currentExpenseMonth, int currentExpenseYear, int userID)
         {
             var expensesPerMonth = Mapper.GetExpensesPerMonth(m_AppDbContext.Expenses.ToList(), currentExpenseMonth, userID);
             expensesPerMonth = expensesPerMonth.Where(e => e.Linked_Year == currentExpenseYear.ToString()).ToList();
@@ -55,9 +56,9 @@ namespace ExpensesManger.Services
             }
         }
 
-        public List<ExpenseRecord> CreateExpenses(DataTable dataTable, BankTypes.FileTypes fileType,int userID, DateTime ChargeDate)
+        public List<ExpenseRecord> CreateExpenses(DataTable dataTable, BankTypes.FileTypes fileType, int userID, DateTime ChargeDate)
         {
-            List<ExpenseMapper>? mappedExpenses = Mapper.MapFile(dataTable, fileType,userID, m_ExpenseMapperFactory);
+            List<ExpenseMapper>? mappedExpenses = Mapper.MapFile(dataTable, fileType, userID, m_ExpenseMapperFactory);
 
             foreach (var expense in mappedExpenses)
             {
@@ -82,12 +83,12 @@ namespace ExpensesManger.Services
 
         #region Internal Methods
 
-        internal static ExpenseRecord SetExpenseMapperToExpenseRecord(ExpenseMapper expenseMapper, int userID,DateTime chargedDate)
+        internal static ExpenseRecord SetExpenseMapperToExpenseRecord(ExpenseMapper expenseMapper, int userID, DateTime chargedDate)
         {
             string month = Utils.GetExpenseLinkedMonth(expenseMapper.TransactionDate.Value, chargedDate).ToString();
             string? exchangeDescription = Utils.ReformatHebrewString(expenseMapper.ExchangeDescription);
 
-            ExpenseRecord expenseRecord =  new()
+            ExpenseRecord expenseRecord = new()
             {
                 TransactionID = Utils.GenerateRandomID(),
                 Transaction_Date = expenseMapper.TransactionDate.ToString(),
@@ -103,16 +104,16 @@ namespace ExpensesManger.Services
                 Linked_Month = month,
                 User_ID = userID,
                 Linked_Year = Utils.GetExpenseLinkedYearAsDateTime(expenseMapper.TransactionDate.Value, Utils.GetUserChargeDay(userID), Convert.ToInt32(month)).Year.ToString()
-        };
+            };
 
-            if(!string.IsNullOrEmpty(expenseMapper.ExchangeDescription))
+            if (!string.IsNullOrEmpty(expenseMapper.ExchangeDescription))
             {
                 expenseRecord.Debit_Amount = double.Parse(expenseMapper.ForegnierDebitAmount);
                 expenseRecord.Exchange_Rate = Utils.GetExchangeRate(exchangeDescription);
             }
 
             return expenseRecord;
-        } 
+        }
         #endregion
     }
 }

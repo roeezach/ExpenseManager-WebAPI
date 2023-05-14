@@ -42,3 +42,7 @@ obj/
 /.vs
 /.db
 /ExpensesManager.DB/Migrations/
+properties/
+
+#files
+.gitattributes

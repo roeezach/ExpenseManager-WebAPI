@@ -4,8 +4,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using ExpensesManager.DB;
-using ExpensesManger.Services;
 using ExpensesManger.Services.BuisnessLogic.Map;
+using ExpensesManger.Services.Contracts;
+using ExpensesManger.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

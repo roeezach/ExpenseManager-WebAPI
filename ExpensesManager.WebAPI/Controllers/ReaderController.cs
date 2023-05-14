@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ExpensesManger.Services;
+using ExpensesManger.Services.Contracts;
 
 namespace ExpensesManager.WebAPI.Controllers
 {
