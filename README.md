@@ -28,24 +28,24 @@ currently, the app is using `swagger` to interact with the API endpoints.
 
 to use this repo please install the following dependencies: 
 
-`dotnet add package ExcelDataReader -v 3.6.0`
+```dotnet add package ExcelDataReader -v 3.6.0
 
-`dotnet add package ExcelDataReader.DataSet -v 3.6.0`
+dotnet add package ExcelDataReader.DataSet -v 3.6.0
 
-`dotnet add package Microsoft.AspNet.WebApi.Client -v 5.2.9`
+dotnet add package Microsoft.AspNet.WebApi.Client -v 5.2.9
 
-`dotnet add package Microsoft.AspNetCore.WebUtilities -v 2.2.0`
+dotnet add package Microsoft.AspNetCore.WebUtilities -v 2.2.0
 
-`dotnet add package Microsoft.EntityFrameworkCore.Design -v 6.0.8`
+dotnet add package Microsoft.EntityFrameworkCore.Design -v 6.0.8
 
-`dotnet add package Swashbuckle.AspNetCore.SwaggerGen -v 6.4.0`
+dotnet add package Swashbuckle.AspNetCore.SwaggerGen -v 6.4.0
 
-`dotnet add package Swashbuckle.AspNetCore -v 6.2.3`
+dotnet add package Swashbuckle.AspNetCore -v 6.2.3
 
-`dotnet add package System.Data.SQLite -v 1.0.116`
+dotnet add package System.Data.SQLite -v 1.0.116
 
-`dotnet add package System.Data.SQLite.Core -v 1.0.116`
+dotnet add package System.Data.SQLite.Core -v 1.0.116
 
-`dotnet add package System.Text.Encoding.CodePages -v 6.0.0`
+dotnet add package System.Text.Encoding.CodePages -v 6.0.0
 
-`dotnet add package Microsoft.AspNetCore.JsonPatch -v 6.0.7`
+dotnet add package Microsoft.AspNetCore.JsonPatch -v 6.0.7```
