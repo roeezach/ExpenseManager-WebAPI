@@ -1,0 +1,53 @@
+.navbar_container {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 10%;
+  background-color: var(--color-brand--2);
+  font-family: 'Manrope';
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10rem;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 6rem;
+  letter-spacing: 1.92px;
+}
+
+.title_log {
+  color: #083b1e;
+  margin-bottom: 1rem;
+}
+
+li::marker {
+  content: '';
+}
+
+.navbar_item {
+  text-decoration: none;
+  padding: 0.5rem 0.25rem;
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 32px;
+  letter-spacing: 1.92px;
+}
+
+.navbar_pages {
+  display: flex;
+  flex-direction: column;
+}
+
+.selected_nav {
+  text-decoration: underline;
+}
+
+main {
+  margin-left: 10rem;
+}

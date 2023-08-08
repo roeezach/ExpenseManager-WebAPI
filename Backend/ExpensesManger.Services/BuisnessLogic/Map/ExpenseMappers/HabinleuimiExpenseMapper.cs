@@ -6,7 +6,7 @@ namespace ExpensesManger.Services.BuisnessLogic.Map.ExpenseMappers
 {
     internal class HabinleuimiExpenseMapper : ExpenseMapper
     {
- 
+
         [DataNames("CardInfo")]
         public string CardDetails { get; set; }
         

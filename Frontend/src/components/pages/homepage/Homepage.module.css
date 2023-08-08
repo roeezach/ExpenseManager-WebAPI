@@ -1,0 +1,11 @@
+.centerContent {
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  display: flex;
+  color: var(--color-dark--1);
+}
+
+.adjustRight {
+  margin-left: 5%; /* Width of the sidebar */
+}
