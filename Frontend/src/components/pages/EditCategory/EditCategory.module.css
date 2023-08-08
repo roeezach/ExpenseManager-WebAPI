@@ -1,0 +1,37 @@
+.editCategoriesContainer {
+  text-align: right;
+  margin-top: 2rem; /* Add the desired margin */
+}
+
+.categoryList {
+  list-style: none;
+  padding: 0;
+}
+
+.categoryItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.categoryName {
+  color: black;
+}
+
+.deleteButton {
+  background-color: var(--color-brand--1);
+  color: var(--color-brand--1);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+}
+
+.deleteButton:hover {
+  background-color: var(--color-brand--3);
+  transform: scale(1.05);
+}
