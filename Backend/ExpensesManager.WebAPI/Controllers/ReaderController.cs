@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ExpensesManger.Services.Contracts;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace ExpensesManager.WebAPI.Controllers
 {
@@ -21,11 +23,33 @@ namespace ExpensesManager.WebAPI.Controllers
             return Ok(m_ExpenseReaderService.GetDefaultFilePath());
         }
 
-        [HttpPost]
-        public IActionResult CreateFilesPath(string fileName)
+        [HttpGet(Name = "GetUploadedFiles")]
+        public IActionResult GetUploadedFiles(int userID)
         {
+            return Ok(m_ExpenseReaderService.GetUploadedFiles(userID));
+        }
+
+        [HttpPost]
+        public IActionResult CreateFilesPath(IFormFile file, int userID)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+            string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+            string extension = Path.GetExtension(file.FileName);
             string path = m_ExpenseReaderService.CreatePathForFiles();
-            return CreatedAtRoute("GetFilePath", new { filePath = path });
+            string filePath = Path.Combine(path, $"{fileName}{extension}");
+            if (System.IO.File.Exists(filePath))
+            {
+                return Conflict("File already exists.");
+            }
+            using (FileStream stream = new(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+            bool isFileCreated = m_ExpenseReaderService.SaveUploadedFile(fileName, System.DateTime.Now, userID);
+            return CreatedAtRoute("GetFilePath", new { filePath = path, fileName, isFileCreated });
         }
 
         [HttpDelete]

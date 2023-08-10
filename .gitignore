@@ -45,3 +45,4 @@ Migrations/
 .vscode/
 .vs/
 .gitattributes
+.env

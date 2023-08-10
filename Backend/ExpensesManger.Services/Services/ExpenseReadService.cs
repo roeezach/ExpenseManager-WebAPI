@@ -1,4 +1,5 @@
-﻿using ExpensesManager.DB;
+﻿using ExpensesManager.BuisnessLogic.Core;
+using ExpensesManager.DB;
 using ExpensesManager.Services;
 using ExpensesManger.Services.Contracts;
 using System.Data;
@@ -63,5 +64,29 @@ namespace ExpensesManger.Services.Services
         {
             return Reader.ReadFile(path);
         }
+
+        public bool SaveUploadedFile(string fileName, DateTime uploadDate, int userID)
+        {
+            if (!appDbContext.UploadedFiles.Any(file => file.FileName == fileName))
+            {
+                var uploadedFile = new UploadedFile
+                {
+                    Id = Utils.GenerateRandomID(),
+                    FileName = fileName,
+                    UploadDate = uploadDate,
+                    UserID = userID
+                };
+                appDbContext.UploadedFiles.Add(uploadedFile);
+                appDbContext.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public List<UploadedFile> GetUploadedFiles(int userID)
+        {
+            return appDbContext.UploadedFiles.Where(file => file.UserID == userID).ToList();
+        }
+
     }
 }
