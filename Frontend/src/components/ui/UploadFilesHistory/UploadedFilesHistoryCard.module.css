@@ -1,0 +1,6 @@
+.table_header tbody {
+  padding: 0.5rem 1rem;
+}
+.uploaded-files-table td {
+  padding: 0.5rem 1rem; /* Adjust the padding as needed */
+}

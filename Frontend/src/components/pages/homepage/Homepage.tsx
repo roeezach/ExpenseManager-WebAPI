@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Homepage.module.css'; // Import your CSS module
+import styles from './Homepage.module.css'; 
 
 const Homepage: React.FC = () => {
   return (

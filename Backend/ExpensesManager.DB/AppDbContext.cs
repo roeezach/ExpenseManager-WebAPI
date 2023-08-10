@@ -12,6 +12,7 @@ namespace ExpensesManager.DB
         public DbSet<TotalExpensePerCategory> TotalExpensesPerCategory { get; set; }
         public DbSet<Users> Users { get; set; }
         public DbSet<RecalculatedExpenseRecord> RecalculatedExpenseRecords{ get; set; }
+        public DbSet<UploadedFile> UploadedFiles { get; set; }
         public string DbPath { get; }
 
         #endregion
