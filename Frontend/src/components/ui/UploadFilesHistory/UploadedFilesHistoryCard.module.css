@@ -1,6 +1,19 @@
 .table_header tbody {
   padding: 0.5rem 1rem;
 }
-.uploaded-files-table td {
-  padding: 0.5rem 1rem; /* Adjust the padding as needed */
+td {
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+  border-color: inherit;
+  border-style: solid;
+  border-width: 0;
+  text-align: center;
 }

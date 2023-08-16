@@ -57,3 +57,17 @@
   justify-items: center;
   margin-left: 40rem;
 }
+
+@media (max-width: 768px) {
+  .container {
+    margin-left: 2rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cardGrid {
+    grid-template-columns: 1fr; /* Display one card per row on small screens */
+    gap: 1rem;
+    margin-left: 12rem; /* Remove margin for smaller screens */
+  }
+}
