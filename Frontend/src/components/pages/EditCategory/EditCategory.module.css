@@ -1,6 +1,22 @@
 .editCategoriesContainer {
-  text-align: right;
-  margin-top: 2rem; /* Add the desired margin */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.card {
+  margin-top: 2rem;
+  width: 80%;
+  min-width: 800px;
+  height: 80vh;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: auto;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  margin-left: 20rem;
 }
 
 .categoryList {
@@ -9,20 +25,40 @@
 }
 
 .categoryItem {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
 }
 
 .categoryName {
   color: black;
+  font-size: 1.2rem;
+  flex: 1; /* Take up available space, pushing keywords and buttons to the right */
 }
 
-.deleteButton {
-  background-color: var(--color-brand--1);
-  color: var(--color-brand--1);
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.keywords {
+  text-align: center;
+  flex: 1;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+}
+
+.deleteButton,
+.editButton {
+  background-color: var(--color-dark--3);
+  color: var(--color-light--3);
   border: none;
+  font-size: 1.2rem;
   padding: 0.5rem 1rem;
   border-radius: 5px;
   cursor: pointer;
@@ -31,7 +67,72 @@
     transform 0.2s;
 }
 
-.deleteButton:hover {
-  background-color: var(--color-brand--3);
+.deleteButton {
+  margin-right: 5px; /* Add some space between buttons */
+}
+
+.deleteButton:hover,
+.editButton:hover {
+  background-color: var(--color-dark--0);
   transform: scale(1.05);
+}
+
+.keywordInput {
+  font-size: 1.2rem;
+  border-radius: 10rem;
+  padding: 0.5rem 1rem;
+  width: 70%;
+  text-align: right;
+  margin-right: 14rem;
+}
+
+.keywordTag {
+  font-size: 1.2rem;
+  border-radius: 10rem;
+  background-color: var(--color-light--3);
+  color: var(--color-dark--0);
+  padding: 0.5rem 1rem;
+  margin: 0.2rem;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.deleteKeywordButton:hover {
+  cursor: pointer;
+}
+
+@media (max-width: 320px) {
+  .card {
+    width: 95%;
+    margin-left: 0;
+    font-size: 1rem; /* Adjust font size for small mobile */
+  }
+}
+
+@media (max-width: 375px) {
+  .card {
+    width: 95%;
+    font-size: 1.1rem; /* Adjust font size for medium mobile */
+  }
+}
+
+@media (max-width: 425px) {
+  .card {
+    width: 95%;
+    font-size: 1.1rem; /* Adjust font size for large mobile */
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 90%;
+    font-size: 1.2rem; /* Adjust font size for tablet */
+  }
+}
+
+@media (max-width: 1440px) {
+  .card {
+    width: 70%;
+    font-size: 1.3rem; /* Adjust font size for laptop */
+  }
 }

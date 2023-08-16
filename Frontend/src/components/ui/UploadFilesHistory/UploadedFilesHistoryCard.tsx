@@ -31,7 +31,7 @@ const UploadedFilesHistoryCard  = () => {
       <div className={`${styles.card}`}>
         <div className="dropzone">
           <h2 className={`text-xl font-bold mb-4`}>Uploaded Files History</h2>
-          <table>
+          <table className="uploaded-files-table">
             <thead>
               <tr>
                 <th>File Name</th>

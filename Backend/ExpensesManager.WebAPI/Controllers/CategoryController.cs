@@ -22,7 +22,7 @@ namespace ExpensesManager.WebAPI.Controllers
             return Ok(m_CategoryService.GetCategories());
         }
 
-        [HttpGet("{userID:int}")]
+        [HttpGet("GetUserCategories/{userID:int}")]
         public IActionResult GetUserCategories(int userID)
         {
             return Ok(m_CategoryService.GetUserCategories(userID));
