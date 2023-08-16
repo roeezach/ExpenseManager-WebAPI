@@ -47,3 +47,28 @@ li::marker {
 .selected_nav {
   text-decoration: underline;
 }
+
+@media (max-width: 768px) {
+  .navbar_container {
+    width: 40vw;
+    padding-top: 5rem;
+    font-size: 1.2rem;
+    line-height: 4rem;
+  }
+
+  .navbar_item {
+    margin-bottom: 0.5rem;
+  }
+
+  .overview,
+  .upload_files,
+  .edit_categories,
+  .about,
+  .settings,
+  .logout {
+    position: relative;
+    margin: 2rem 0;
+    width: 20rem;
+    height: 10rem; /* Adjust the height as needed */
+  }
+}
