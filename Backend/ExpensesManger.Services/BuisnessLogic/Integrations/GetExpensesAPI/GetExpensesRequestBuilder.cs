@@ -22,7 +22,7 @@ namespace ExpensesManager.Integrations.GetExpensesAPI
             apiClient.BaseAddress = new Uri(SPLITWISE_BASE_ADDRESS + API_NAME_EXPENSES);
             Console.WriteLine();
             Console.WriteLine("pleae enter the auturization token of the user");
-            string auturizationString = Console.ReadLine();
+            string? auturizationString = Console.ReadLine();
             apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auturizationString);
         }
 

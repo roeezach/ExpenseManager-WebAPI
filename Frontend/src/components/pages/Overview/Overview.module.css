@@ -1,0 +1,63 @@
+.centerContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.adjustRight {
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.centerContainer {
+  justify-content: center;
+}
+
+.select {
+  padding: 5px;
+  margin: 0 10px;
+}
+
+.card {
+  padding-top: 1rem;
+  width: 85%;
+  height: 80vh;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: auto;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  margin-left: 15rem;
+}
+.graphContainer {
+  display: flex;
+  justify-content: space-evenly;
+  padding-left: 12rem;
+}
+
+.table {
+  width: 60%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ccc;
+  text-align: center;
+  padding: 0.3rem;
+}
+
+.table th {
+  background-color: var(--color-light--4);
+  font-weight: bold;
+}
+
+.tableContainer {
+  display: flex;
+  justify-content: center;
+}
