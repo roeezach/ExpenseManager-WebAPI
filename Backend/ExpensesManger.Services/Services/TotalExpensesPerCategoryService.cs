@@ -43,7 +43,7 @@ namespace ExpensesManger.Services.Services
 
         public double GetCategorySum(int month, int year, string category, int userID)
         {
-            TotalExpensePerCategory expensePerCategory = m_AppDbContext.TotalExpensesPerCategory.FirstOrDefault(c => c.Category == category && c.Year == year
+            TotalExpensePerCategory? expensePerCategory = m_AppDbContext.TotalExpensesPerCategory.FirstOrDefault(c => c.Category == category && c.Year == year
                                                                                                                         && c.Month == month && c.SW_UserID == userID);
             return expensePerCategory == null ? -1 : expensePerCategory.Total_Amount;
         }

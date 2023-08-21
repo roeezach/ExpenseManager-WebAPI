@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable enable
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExpensesManager.DB.Models
@@ -14,11 +15,11 @@ namespace ExpensesManager.DB.Models
     
         [Required]
         [Column("Expense_Description", Order = 3)]
-        public string Expense_Description { get; set; }
+        public string? Expense_Description { get; set; }
 
         [Required]
         [Column("Category", Order = 4)]
-        public string Category { get; set; }
+        public string? Category { get; set; }
 
 
         [Column("Price_Amount", Order = 5)]
@@ -40,10 +41,10 @@ namespace ExpensesManager.DB.Models
         public double Exchange_Rate { get; set; }
 
         [Column("Linked_Month", Order = 11)]
-        public string Linked_Month { get; set; }
+        public string? Linked_Month { get; set; }
 
         [Column("Linked_Year", Order = 12)]
-        public string Linked_Year { get; set; }
+        public string? Linked_Year { get; set; }
 
         [Column("Transaction_Date", Order = 13)]
         public string? Transaction_Date { get; set; }

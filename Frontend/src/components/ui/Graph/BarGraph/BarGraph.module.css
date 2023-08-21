@@ -1,0 +1,12 @@
+/* Graph.module.css */
+.centerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-left: -15rem;
+}
+
+.recharts-wrapper {
+  width: 100%; /* Adjust as needed */
+}

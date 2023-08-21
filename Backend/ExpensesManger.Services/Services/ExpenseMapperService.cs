@@ -85,7 +85,7 @@ namespace ExpensesManger.Services.Services
 
         internal static ExpenseRecord SetExpenseMapperToExpenseRecord(ExpenseMapper expenseMapper, int userID, DateTime chargedDate)
         {
-            string month = Utils.GetExpenseLinkedMonth(expenseMapper.TransactionDate.Value, chargedDate).ToString();
+            string month = expenseMapper.TransactionDate.HasValue ? Utils.GetExpenseLinkedMonth(expenseMapper.TransactionDate.Value, chargedDate).ToString() : "-1";
             string? exchangeDescription = Utils.ReformatHebrewString(expenseMapper.ExchangeDescription);
 
             ExpenseRecord expenseRecord = new()
