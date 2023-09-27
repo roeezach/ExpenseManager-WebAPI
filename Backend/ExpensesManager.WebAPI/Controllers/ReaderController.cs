@@ -30,7 +30,7 @@ namespace ExpensesManager.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateFilesPath(IFormFile file, int userID)
+        public IActionResult CreateFilesPath(IFormFile file, int userID, string fileType, int monthToMap, int yearToMap)
         {
             if (file == null || file.Length == 0)
             {
@@ -48,7 +48,7 @@ namespace ExpensesManager.WebAPI.Controllers
             {
                 file.CopyTo(stream);
             }
-            bool isFileCreated = m_ExpenseReaderService.SaveUploadedFile(fileName, System.DateTime.Now, userID);
+            bool isFileCreated = m_ExpenseReaderService.SaveUploadedFile(fileName, System.DateTime.Now, userID, fileType, monthToMap, yearToMap);
             return CreatedAtRoute("GetFilePath", new { filePath = path, fileName, isFileCreated });
         }
 

@@ -1,11 +1,12 @@
 import axios from 'axios';
+import { fileTypeParser } from '../utils/FileTypes';
 
-const createFilesPath = async (file: File, userId: number) => {
+const createFilesPath = async (file: File, userId: number,  bankType:string, selectedMonth: number, selectedYear: number) => {
   const formData = new FormData();
   formData.append('file', file);
   
   try {
-    const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/Reader/CreateFilesPath?userId=${userId}`, formData);
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/Reader/CreateFilesPath?userId=${userId}&fileType=${bankType}&monthToMap=${selectedMonth}&yearToMap=${selectedYear}`, formData);
     return response.data;
   } catch (error) {
     console.error('Upload error:', error);

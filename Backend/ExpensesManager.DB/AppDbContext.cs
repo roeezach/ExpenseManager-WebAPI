@@ -1,10 +1,13 @@
 ﻿using ExpensesManager.DB.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace ExpensesManager.DB
 {
     public class AppDbContext : DbContext
     {
+
+
         #region Properties
         public DbSet<ExpenseRecord> Expenses { get; set; }
         public DbSet<Categories> Categories { get; set; }

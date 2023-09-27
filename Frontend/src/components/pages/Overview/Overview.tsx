@@ -4,6 +4,7 @@ import BarGraph from '../../ui/Graph/BarGraph/BarGraph';
 import PieChartComponent from '../../ui/Graph/PieGraph/PieGraph';
 import styles from './Overview.module.css';
 import totalExpensePerCategoryService from '../../../services/totalExpensePerCategoryService';
+import MonthYearSelector from '../../ui/MonthYearSelector/MonthYearSelector';
 
 const Homepage: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -11,12 +12,14 @@ const Homepage: React.FC = () => {
   const [monthData, setMonthData] = useState([]);
 
   useEffect(() => {
-    fetchMonthData(selectedMonth + 1, selectedYear);
+    fetchMonthData(selectedMonth, selectedYear);
   }, [selectedMonth, selectedYear]);
 
   const fetchMonthData = async (month: number, year: number) => {
     try {
-      const currUserId = 19773792;
+      const currUserId = parseInt(process.env.REACT_APP_USER_ID_TEMP, 10);
+      console.log(`the month is ${month}`);
+      
       const data = await totalExpensePerCategoryService.getCategoriesSumPerTimePeriod(month, year, currUserId);
 
       if (data.length === 0) {
@@ -30,8 +33,6 @@ const Homepage: React.FC = () => {
     }
   };
 
-  const years = Array.from({ length: new Date().getFullYear() - 2021 + 1 }, (_, index) => 2021 + index);
-  const months = Array.from({ length: 12 }, (_, index) => index + 1);
   const dataArray = Object.entries(monthData).map(([name, value]) => ({ name, value }));
   const totalValue = dataArray.reduce((sum, entry) => sum + entry.value, 0);
 
@@ -41,20 +42,12 @@ const Homepage: React.FC = () => {
         <div className={styles.adjustRight}>
           <h2>Overview Page</h2>
           <div className={`${styles.row} ${styles.centerContainer}`}>
-            <select className={styles.select} value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))}>
-              {months.map(month => (
-                <option key={month} value={month}>
-                  {new Date(0, month - 1).toLocaleString('default', { month: 'long' })}
-                </option>
-              ))}
-            </select>
-            <select className={styles.select} value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
-              {years.map(year => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
+             <MonthYearSelector
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
+              setSelectedMonth={setSelectedMonth}
+              setSelectedYear={setSelectedYear}              
+            />              
           </div>
           {Object.keys(monthData).length === 0 ? (
             <p>

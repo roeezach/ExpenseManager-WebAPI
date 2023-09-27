@@ -99,6 +99,12 @@ namespace ExpensesManager.Services
             return filteredList.Where(er => er.Linked_Month == currentExpenseChargeDate.ToString() && er.User_ID == userID).ToList();
         }
 
+        public List<ExpenseRecord> GetExpensesePerMonthAndYear(List<ExpenseRecord> distinctCategoryList ,int currentExpenseMonth, int currentExpenseYear, int userID)
+        {
+             var expensesPerMonth = GetExpensesPerMonth(distinctCategoryList, currentExpenseMonth, userID);            
+             return expensesPerMonth.Where(e => e.Linked_Year == currentExpenseYear.ToString()).ToList();
+        }
+
         #endregion Public Methods
 
         #region Private Methods

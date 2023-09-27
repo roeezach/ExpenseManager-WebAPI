@@ -18,7 +18,9 @@ const EditCategories: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const userId = 19773792; // Replace with the actual user ID after logic functionality
+        const userId = parseInt(process.env.REACT_APP_USER_ID_TEMP, 10);
+        console.log(userId);
+         // TODO - adjust after user managment
         const data = await categoryService.getUserCategories(userId);
         const parsedCategories = JSON.parse(data.mappedCategoriesJson);
         const categoriesArray: Category[] = parsedCategories.map((category: { CategoryName: string; Keywords: string[]; }) => ({

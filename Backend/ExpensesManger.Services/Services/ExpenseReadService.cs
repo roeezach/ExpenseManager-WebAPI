@@ -65,7 +65,7 @@ namespace ExpensesManger.Services.Services
             return Reader.ReadFile(path);
         }
 
-        public bool SaveUploadedFile(string fileName, DateTime uploadDate, int userID)
+        public bool SaveUploadedFile(string fileName, DateTime uploadDate, int userID, string fileType, int monthToMap, int yearToMap)
         {
             if (!appDbContext.UploadedFiles.Any(file => file.FileName == fileName))
             {
@@ -74,7 +74,10 @@ namespace ExpensesManger.Services.Services
                     Id = Utils.GenerateRandomID(),
                     FileName = fileName,
                     UploadDate = uploadDate,
-                    UserID = userID
+                    UserID = userID,
+                    FileType = fileType,
+                    LinkedMonth = monthToMap,
+                    LinkedYear = yearToMap
                 };
                 appDbContext.UploadedFiles.Add(uploadedFile);
                 appDbContext.SaveChanges();
