@@ -30,6 +30,7 @@
 *.exe
 *.out
 *.app
+*.config
 # *.db
 
 # folders
@@ -37,10 +38,12 @@ bin/
 bin/Debug/
 obj/
 Migrations/
+Configurations/
 /.vs/ExpensesManager/v16
 /.vs/ExpensesManager/DesignTimeBuild
 /bin/Debug/net6.0
 /bin/Debug/netcoreapp3.1
+/Configurations/app.config
 /.vs
 .vscode/
 .vs/

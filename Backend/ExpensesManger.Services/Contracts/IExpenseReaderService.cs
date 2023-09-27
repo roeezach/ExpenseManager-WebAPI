@@ -8,7 +8,7 @@ namespace ExpensesManger.Services.Contracts
         DataTable GetReadFile(string path);
         DateTime GetExpenseFileDateRangeStart();
         string CreatePathForFiles();
-        bool SaveUploadedFile(string fileName, DateTime uploadDate, int userID);
+        bool SaveUploadedFile(string fileName, DateTime uploadDate, int userID, string fileType, int monthToMap, int yearToMap);
         string GetPathWithFile(string fileName);
         public string GetDefaultFilePath();
         string EditPathWithFiles(string newPath, string fileName);

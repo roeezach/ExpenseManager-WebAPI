@@ -27,13 +27,32 @@ namespace ExpensesManager.WebAPI.Controllers
             return Ok(m_ExpenseMapperService.GetMapExpenses());
         }
 
+        [HttpGet(Name = "GetMappedExpensesPerMonth")]
+        public IActionResult GetMappedExpensesPerMonth(int Month, int Year, int userId)
+        {
+            return Ok(m_ExpenseMapperService.GetMapExpensesPerMonth(Month, Year, userId));
+        }
+
         [HttpPost]
         public IActionResult CreateMappedExpenses(string fileName, BankTypes.FileTypes fileType,int userID, DateTime chargedDate)
         {
             DataTable fileData = m_ExpenseReaderService.GetReadFile(m_ExpenseReaderService.GetPathWithFile(fileName));
             var mappedExpense = m_ExpenseMapperService.CreateExpenses(fileData, fileType, userID, chargedDate );
 
-            return CreatedAtRoute("GetMappedExpenses" , new { createdFileName = fileName } , mappedExpense);
+            int routeMonth = chargedDate.Month - 1;
+            int routeYear = chargedDate.Year;
+
+            if (routeMonth == 1)
+            {
+                routeMonth = 12; 
+                routeYear--; 
+            }
+            else
+            {
+                routeMonth--;
+            }
+
+            return CreatedAtRoute("GetMappedExpensesPerMonth", new { Month = routeMonth, Year = routeYear, userId = userID }, mappedExpense);
         }
 
         [HttpDelete]

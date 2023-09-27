@@ -1,4 +1,5 @@
 ﻿using ExpensesManager.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace ExpensesManager.Integrations.GetExpensesAPI
 {
@@ -9,11 +10,11 @@ namespace ExpensesManager.Integrations.GetExpensesAPI
 
         internal static DateTime ExpensesDatesStart { get; set; }
 
-        internal static Task<string> SplitWiseApiHandlerWithDates(DateTime dateRangeStart)
+        internal static Task<string> SplitWiseApiHandlerWithDates(DateTime dateRangeStart, IConfiguration config)
         {
             ExpensesDatesStart = dateRangeStart;
             GetExpensesRequestBuilder.HeaderBuilder();
-            GetExpensesRequestBuilder.SplitwiseAuthenticationRequestBuilder();
+            GetExpensesRequestBuilder.SplitwiseAuthenticationRequestBuilder(config);
 
             GetExpensesRequestBuilder.SetDateRangeStartEndDateRequest(ExpensesDatesStart, ExpensesDatesStart.AddMonths(MONTHS_RANGE));
             Task<string> expensesDataString = GetExpensesResponseProcesser.GetTaskAsyncResponse();
@@ -21,11 +22,11 @@ namespace ExpensesManager.Integrations.GetExpensesAPI
             return expensesDataString;
         }
 
-        internal static Task<string> SplitWiseApiHandler(DateTime dateRangeStart)
+        internal static Task<string> SplitWiseApiHandler(DateTime dateRangeStart, IConfiguration config)
         {
             ExpensesDatesStart = dateRangeStart;
             GetExpensesRequestBuilder.HeaderBuilder();
-            GetExpensesRequestBuilder.SplitwiseAuthenticationRequestBuilder();
+            GetExpensesRequestBuilder.SplitwiseAuthenticationRequestBuilder(config);
 
             Task<string> expensesDataString = GetExpensesResponseProcesser.GetTaskAsyncResponse();
 

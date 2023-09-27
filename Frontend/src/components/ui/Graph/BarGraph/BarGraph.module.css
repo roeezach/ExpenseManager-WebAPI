@@ -1,4 +1,3 @@
-/* Graph.module.css */
 .centerContainer {
   display: flex;
   justify-content: center;
@@ -8,5 +7,5 @@
 }
 
 .recharts-wrapper {
-  width: 100%; /* Adjust as needed */
+  width: 100%;
 }

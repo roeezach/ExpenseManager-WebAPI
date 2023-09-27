@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
 
 namespace ExpensesManager.Integrations.GetExpensesAPI
 {
@@ -17,13 +18,21 @@ namespace ExpensesManager.Integrations.GetExpensesAPI
             apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        internal static void SplitwiseAuthenticationRequestBuilder()
+    internal static void SplitwiseAuthenticationRequestBuilder(IConfiguration configuration)
         {
+            string? authorizationString;
             apiClient.BaseAddress = new Uri(SPLITWISE_BASE_ADDRESS + API_NAME_EXPENSES);
-            Console.WriteLine();
-            Console.WriteLine("pleae enter the auturization token of the user");
-            string? auturizationString = Console.ReadLine();
-            apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auturizationString);
+            authorizationString = configuration.GetSection("Secrets")["SplitewiseSecret"];
+
+            if (string.IsNullOrEmpty(authorizationString))
+            {
+                Console.WriteLine();
+                Console.WriteLine("Splitwise API key not found in configuration.");
+                Console.WriteLine("pleae enter the auturization token of the user");
+                authorizationString = Console.ReadLine();
+            }
+
+            apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authorizationString);
         }
 
         internal static void SetDateRangeStartEndDateRequest(DateTime dateStart, DateTime dateEnd)

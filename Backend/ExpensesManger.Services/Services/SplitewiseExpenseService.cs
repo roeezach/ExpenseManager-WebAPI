@@ -6,6 +6,7 @@ using ExpensesManager.Integrations.SplitWiseModels;
 using ExpensesManger.Services.BuisnessLogic.Map;
 using ExpensesManger.Services.Contracts;
 using Users = ExpensesManager.Integrations.SplitWiseModels.Users;
+using Microsoft.Extensions.Configuration;
 
 namespace ExpensesManger.Services.Services
 {
@@ -18,6 +19,7 @@ namespace ExpensesManger.Services.Services
         private const int ONE_YEAR = 1;
         private readonly AppDbContext appDbContext;
         private readonly ICategoryService m_CategoryService;
+        private readonly IConfiguration m_configuration;
 
 
         #endregion
@@ -29,9 +31,10 @@ namespace ExpensesManger.Services.Services
         #endregion
 
         #region Ctor
-        public SplitewiseExpenseService(AppDbContext appDbContext, ICategoryService categoryService)
+        public SplitewiseExpenseService(AppDbContext appDbContext, ICategoryService categoryService, IConfiguration configuration)
         {
             this.appDbContext = appDbContext;
+            m_configuration = configuration;
             SplitWiseExpenseDO = new SplitwiseExpenses();
             SwRecords = new SwRecords();
             m_CategoryService = categoryService;
@@ -48,7 +51,9 @@ namespace ExpensesManger.Services.Services
 
         public List<SwRecords> GetSwRecords(DateTime fromDate)
         {
-            return appDbContext.SpliteWise.Where(sw => sw.Linked_Month == fromDate.Month.ToString()).ToList();
+            return appDbContext.SpliteWise.Where(sw => sw.Linked_Month == fromDate.Month.ToString() 
+            && sw.Linked_Year == fromDate.Year.ToString())
+            .ToList();
         }
 
         public List<SwRecords> CreateSwRecords(DateTime fromDate)
@@ -92,7 +97,7 @@ namespace ExpensesManger.Services.Services
         #region Private Methods
         private SplitwiseExpenses CallingSplitwiseGetExpensesApi(DateTime fromDate)
         {
-            Task<string> runApiTask = Task.Run(() => GetExpensesExecuter.SplitWiseApiHandlerWithDates(fromDate));
+            Task<string> runApiTask = Task.Run(() => GetExpensesExecuter.SplitWiseApiHandlerWithDates(fromDate, m_configuration));
             runApiTask.Wait();
 
             return SplitWiseExpenseDO.ParseResponseToExpensesObj(runApiTask.Result);

@@ -98,12 +98,14 @@ namespace ExpensesManger.Services.Services
                                                                                          .ToList();
                 if (uniqueRecEx.Any())
                 {
-                    var uniqueTotalExpenses = CreateTepcForToUniqeRecalculatedExpense(categoryItem.Key, uniqueRecEx, fromDate, userID);
-                    m_AppDbContext.Add(uniqueTotalExpenses);
-                    m_AppDbContext.SaveChanges();
+                    TotalExpensePerCategory? uniqueTotalExpenses = CreateTepcForToUniqeRecalculatedExpense(categoryItem.Key, uniqueRecEx, fromDate, userID);
+                    if(uniqueTotalExpenses != null)
+                    {
+                        m_AppDbContext.Add(uniqueTotalExpenses);
+                        m_AppDbContext.SaveChanges();
+                    }
                 }
             }
-
 
             return expensesCategories;
         }
@@ -164,12 +166,14 @@ namespace ExpensesManger.Services.Services
         /// <param name="montlyExpensesInCateogry"></param>
         /// <param name="fromDate"></param>
         /// <returns></returns>
-        private TotalExpensePerCategory CreateTepcForToUniqeRecalculatedExpense(string category, List<RecalculatedExpenseRecord> montlyExpensesInCateogry, DateTime fromDate, int userID)
+        private TotalExpensePerCategory? CreateTepcForToUniqeRecalculatedExpense(string category, List<RecalculatedExpenseRecord> montlyExpensesInCateogry, DateTime fromDate, int userID)
         {
             List<RecalculatedExpenseRecord> recalculatedExpenses = GetRecalculatedExpenseRecordPerCategory(category, fromDate, userID);
 
-            List<RecalculatedExpenseRecord> recalculatedExpensesCurrUser = recalculatedExpenses.Where(u => u.SW_UserID == userID)
+            List<RecalculatedExpenseRecord>? recalculatedExpensesCurrUser = recalculatedExpenses.Where(u => u.SW_UserID == userID)
                                                                             .ToList();
+            if(recalculatedExpensesCurrUser == null || recalculatedExpensesCurrUser.Count == 0)
+                    return null;
 
             TotalExpensePerCategory totalExpensePerCategory = new()
             {
@@ -177,7 +181,7 @@ namespace ExpensesManger.Services.Services
                 Total_Amount = recalculatedExpensesCurrUser.Sum(x => x.Owed_Share),
                 Category = category,
                 SW_UserID = userID,
-                Month = Convert.ToInt32(montlyExpensesInCateogry.FirstOrDefault().Linked_Month),
+                Month = fromDate.Month,
                 Year = fromDate.Year
             };
 

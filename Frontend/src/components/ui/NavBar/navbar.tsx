@@ -1,13 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './navbar.module.css';
-import uploadImage from '../../../assets/UPLOAD_FILES.png'
-import editCategories from '../../../assets/EDIT_CATEGORIES.png'
-import overview from '../../../assets/OVERVIEW.png'
-import settings from '../../../assets/SETTINGS.png'
-import about from '../../../assets/ABOUT.png'
-import logout from '../../../assets/LOGOUT.png'
-
+import { FaHome, FaUpload, FaEdit, FaInfoCircle, FaCog, FaSignOutAlt } from 'react-icons/fa'; // Import the specific icons
 
 const Navbar: React.FC = () => (
   <div className="bg-gray-800 text-white h-screen w-64 flex flex-col">
@@ -16,34 +10,40 @@ const Navbar: React.FC = () => (
     </div>
     <nav className={styles.navbar_container}>
       <ul className="space-y-2">
-        <li className={styles.overview}>
-          <NavLink to='/home'>
-          <img src={overview} alt =''></img>
-            </NavLink>
-        </li>
-        <li className={styles.upload_files}>
-          <NavLink to='/files'>
-            <img src={uploadImage} alt =''></img>
+        <li className={styles.navbar_item}>
+          <NavLink to='/home' className={styles.navLink} style={{ color:'white' , display:'flex', alignItems:'center', gap:'0.5rem', textDecoration:'none', marginBottom:'0.3rem'}}>
+            <FaHome />
+            <span>Overview</span>
           </NavLink>
         </li>
-        <li className={styles.edit_categories}>
-          <NavLink to='/edit'>
-          <img src={editCategories} alt =''></img>
+        <li className={styles.navbar_item}>
+          <NavLink to='/files' className={styles.navLink} style={{ color:'white' , display:'flex', alignItems:'center', gap:'0.5rem', textDecoration:'none' ,marginBottom:'0.3rem'}}>
+            <FaUpload />
+            <span>Upload Files</span>
           </NavLink>
         </li>
-        <li className={styles.about}>
-          <NavLink to='/about'>
-          <img src={about} alt =''></img>
+        <li className={styles.navbar_item}>
+          <NavLink to='/edit' className={styles.navLink} style={{ color:'white' , display:'flex', alignItems:'center', gap:'0.5rem', textDecoration:'none' , marginBottom:'0.5rem'}}>
+            <FaEdit />
+            <span>Edit Categories</span>
           </NavLink>
         </li>
-        <li className={styles.settings}>
-          <NavLink to='/settings'>
-          <img src={settings} alt =''></img>
+        <li className={styles.navbar_item}>
+          <NavLink to='/about' className={styles.navLink} style={{ color:'white' , display:'flex', alignItems:'center', gap:'0.5rem', textDecoration:'none' , marginBottom:'0.5rem'}}>
+            <FaInfoCircle />
+            <span>About</span>
           </NavLink>
         </li>
-        <li className={styles.logout}>
-          <NavLink to='/logout'>
-          <img src={logout} alt =''></img>
+        <li className={styles.navbar_item}>
+          <NavLink to='/settings' className={styles.navLink} style={{ color:'white' , display:'flex', alignItems:'center', gap:'0.5rem', textDecoration:'none' ,marginBottom:'0.5rem'}}>
+            <FaCog />
+            <span>Settings</span>
+          </NavLink>
+        </li>
+        <li className={styles.navbar_item}>
+          <NavLink to='/logout' className={styles.navLink} style={{ color:'white' , display:'flex', alignItems:'center', gap:'0.5rem', textDecoration:'none', marginBottom:'0.5rem'}}>
+            <FaSignOutAlt />
+            <span>Logout</span>
           </NavLink>
         </li>
       </ul>

@@ -44,10 +44,14 @@ namespace ExpensesManger.Services.Services
             return m_AppDbContext.Expenses.ToList();
         }
 
+        public List<ExpenseRecord> GetMapExpensesPerMonth(int currentExpenseMonth, int currentExpenseYear, int userID)
+        {
+            return GetExpensesePerMonthAndYear(currentExpenseMonth, currentExpenseYear, userID);
+        }
+        
         public void DeleteExpenses(int currentExpenseMonth, int currentExpenseYear, int userID)
         {
-            var expensesPerMonth = Mapper.GetExpensesPerMonth(m_AppDbContext.Expenses.ToList(), currentExpenseMonth, userID);
-            expensesPerMonth = expensesPerMonth.Where(e => e.Linked_Year == currentExpenseYear.ToString()).ToList();
+            var expensesPerMonth = GetExpensesePerMonthAndYear(currentExpenseMonth, currentExpenseYear, userID);
 
             foreach (var expense in expensesPerMonth)
             {
@@ -59,14 +63,15 @@ namespace ExpensesManger.Services.Services
         public List<ExpenseRecord> CreateExpenses(DataTable dataTable, BankTypes.FileTypes fileType, int userID, DateTime ChargeDate)
         {
             List<ExpenseMapper>? mappedExpenses = Mapper.MapFile(dataTable, fileType, userID, m_ExpenseMapperFactory);
-
+            List<ExpenseRecord> expensesRecords = new(); 
             foreach (var expense in mappedExpenses)
             {
-                m_AppDbContext.Add(SetExpenseMapperToExpenseRecord(expense, userID, ChargeDate));
-                m_AppDbContext.SaveChanges();
+                expensesRecords.Add(SetExpenseMapperToExpenseRecord(expense, userID, ChargeDate));
             }
-
-            return m_AppDbContext.Expenses.ToList();
+                m_AppDbContext.AddRange(expensesRecords);
+                m_AppDbContext.SaveChanges();
+                
+            return expensesRecords;
         }
 
         public ExpenseRecord EditExpense(ExpenseRecord editedExpense, int expenseID)
@@ -114,6 +119,13 @@ namespace ExpensesManger.Services.Services
 
             return expenseRecord;
         }
+
+        internal List<ExpenseRecord> GetExpensesePerMonthAndYear(int currentExpenseMonth, int currentExpenseYear, int userID)
+        {
+             var expensesPerMonth = Mapper.GetExpensesePerMonthAndYear(m_AppDbContext.Expenses.ToList(), currentExpenseMonth,currentExpenseYear, userID);            
+             return expensesPerMonth.Where(e => e.Linked_Year == currentExpenseYear.ToString()).ToList();
+        }
+
         #endregion
     }
 }
