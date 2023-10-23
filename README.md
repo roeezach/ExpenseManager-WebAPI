@@ -4,22 +4,20 @@ App for handling expenses on a monthly basis -  mapping, storing and categorizin
 
 ## App Structure
 
-The app is now working as a WebApi with .NET Core 6 and Entitiy Framework.
-Currently, there is only Backend for this app and soon I will implement a Frontend.
+The app is now working as a WebApi with `.NET Core 6` and `Entitiy Framework` and the Frontend is using `React` and `Typescript`.
 The app can take an expense file that is generated via the bank system and mapping it to customized categories.
 the app can integrate with [Splitwise](https://dev.splitwise.com/#section/Terms-of-Use/TERMS-OF-USE) 
 and is using `GetExpenses` API of splitwise.
-currently, the app is using `swagger` to interact with the API endpoints.
 
 ### Technologies:
-- Backend : `C#` , `Entity Core Framework`
-- Frontend: `React`. 
-- database : sqlite
-- nuget packages: ExcelDataReader, System.Data.Sqlite
+- Backend : `C#`  `Entity Core Framework`
+- Frontend: `React` `Typescript`
+- database : `sqlite`
 
 #### Future Features
 - Automation testing.
 - CI/CD with github actions.
+- Dockrize the app.
 - additional coverage of different bank files structures ( currently only the Beinleumi and Hapoalim are covered).
 
 ### Dependencies
