@@ -10,7 +10,7 @@ namespace ExpensesManger.Services.Services
         #region Const
 
         private const int DEFAULT_DAY = 1;
-        private const int LOGGED_IN_USER_ID = 19773792;
+        // private const int LOGGED_IN_USER_ID = 19773792;
 
         #endregion
 
@@ -46,10 +46,11 @@ namespace ExpensesManger.Services.Services
 
             foreach (SwRecords swRecord in swRecords)
             {
-                if (swRecord.SW_User_ID == LOGGED_IN_USER_ID)
-                {
-                    expensesInCategory = expensesRecords.Where(c => c.Category == swRecord.Category).ToList();
-                }
+                // OPEN issue about this section
+                // if (swRecord.SW_User_ID == LOGGED_IN_USER_ID)
+                // {
+                expensesInCategory = expensesRecords.Where(c => c.Category == swRecord.Category).ToList();
+                // }
 
                 RecalculatedExpenseRecord recalculatedItem = CreateNewRecalculatedExpenseItems(expensesInCategory, swRecord);
                 m_AppDbContext.Add(recalculatedItem);

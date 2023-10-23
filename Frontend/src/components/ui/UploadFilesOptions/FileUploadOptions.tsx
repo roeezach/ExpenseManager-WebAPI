@@ -4,6 +4,7 @@ import fileUploadStyles from "./FileUploadOptions.module.css"; // Import fileUpl
 import readerService from "../../../services/readerService";
 import MonthYearSelector from "../MonthYearSelector/MonthYearSelector";
 import { Modal } from 'react-bootstrap';
+import { useAuth } from "../../../context/AuthContext";
 
 const DragDropFiles: React.FC = () => {
   const currentDate = new Date();
@@ -16,7 +17,7 @@ const DragDropFiles: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<number>(defaultMonth);
   const [selectedYear, setSelectedYear] = useState<number>(defaultYear);
   const [showSuccessModal, setShowSuccessModal] = useState(false); // State for success modal
-
+  const { user } = useAuth();
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   };
@@ -51,9 +52,8 @@ const DragDropFiles: React.FC = () => {
   const handleUpload = async (bankType:string, selectedMonth:number, selectedYear:number) => {
     if (files) {
       const file = files[0];
-      const userId = parseInt(process.env.REACT_APP_USER_ID_TEMP, 10); // TODO - USER MANAGMENT      
       try {
-        const response = await readerService.createFilesPath(file, userId,bankType, selectedMonth, selectedYear);
+        const response = await readerService.createFilesPath(file, user.userID,bankType, selectedMonth, selectedYear);
         console.log('Upload successful:', response);
         setShowSuccessModal(true);
       } catch (error) {

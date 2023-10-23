@@ -1,18 +1,16 @@
 import React from 'react';
 import styles from './Header.module.css'; // Import the styles
-import profile from '../../../assets/PROFILE.png';
-
-// Sample user data
-const user = {
-  name: 'Roee Zach',
-  profilePicture: profile,
-};
+import { useAuth } from '../../../context/AuthContext'; // Import your AuthContext
 
 const Header: React.FC = () => {
+  const { user } = useAuth(); 
+
   const renderGreeting = () => {
-    if (user) {
+    const { isLoggedIn } = useAuth(); // Get the isLoggedIn state from your context
+  
+    if (isLoggedIn && user) {
       return (
-        <span className={styles.greeting}>Hello, {user.name}</span>
+        <span className={styles.greeting}>Hello, {user.username}</span>
       );
     }
     return (
@@ -23,15 +21,6 @@ const Header: React.FC = () => {
   return (
     <div className={styles.header_container}>
       <div className={styles.greetingContainer}>{renderGreeting()}</div>
-      {user && (
-        <div className={`${styles.profileContainer} flex items-center`}>
-          <img
-            src={user.profilePicture}
-            alt="Profile"
-            className={styles.profileImage}
-          />
-        </div>
-      )}
     </div>
   );
 };

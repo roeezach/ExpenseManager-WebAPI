@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { fileTypeParser } from '../utils/FileTypes';
 
 const createFilesPath = async (file: File, userId: number,  bankType:string, selectedMonth: number, selectedYear: number) => {
   const formData = new FormData();

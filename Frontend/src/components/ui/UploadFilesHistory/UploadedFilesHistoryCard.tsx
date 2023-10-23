@@ -4,16 +4,16 @@ import readerService from '../../../services/readerService';
 import historyStyles from './UploadedFilesHistoryCard.module.css';
 import UploadedFileMapping from '../UploadedFileMapping/UploadedFileMapping';
 import { Modal } from 'react-bootstrap';
+import { useAuth } from '../../../context/AuthContext';
 
 const UploadedFilesHistoryCard = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [mappingModalOpen, setMappingModalOpen] = useState(false);
-
+  const { user } = useAuth();
   useEffect(() => {
     const fetchUploadedFiles = async () => {
       try {
-        const userId = parseInt(process.env.REACT_APP_USER_ID_TEMP, 10); // TODO - USER MANAGMENT
-        const data = await readerService.getUploadedFiles(userId);
+        const data = await readerService.getUploadedFiles(user.userID);
         setUploadedFiles(data);
       } catch (error) {
         console.error('Error fetching uploaded files:', error);
