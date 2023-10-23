@@ -12,16 +12,14 @@ and is using `GetExpenses` API of splitwise.
 currently, the app is using `swagger` to interact with the API endpoints.
 
 ### Technologies:
-- Backend : C# , Entity Core Framework
+- Backend : `C#` , `Entity Core Framework`
+- Frontend: `React`. 
 - database : sqlite
 - nuget packages: ExcelDataReader, System.Data.Sqlite
 
 #### Future Features
-- UI with Javascript.
 - Automation testing.
 - CI/CD with github actions.
-- Users managment : register and login functionality.
-- improvement of reading functionality - drag and drop instead of local file path
 - additional coverage of different bank files structures ( currently only the Beinleumi and Hapoalim are covered).
 
 ### Dependencies
