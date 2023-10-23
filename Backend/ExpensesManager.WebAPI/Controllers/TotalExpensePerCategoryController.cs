@@ -60,7 +60,7 @@ namespace ExpensesManager.WebAPI.Controllers
         public IActionResult DeleteTotalExpensePerCategory(DateTime timePeriod, string catrgory, int userID)
         {
             var totalExpensesPerCategoryToDelete = m_TotalExpensesPerCategoryService.GetTotalCategories().FirstOrDefault(e => (Convert.ToInt32(e.Month) == timePeriod.Month) 
-                                                                                       && e.Year == timePeriod.Year && e.Category == catrgory && e.SW_UserID == userID);
+                                                                                       && e.Year == timePeriod.Year && e.Category == catrgory && e.UserID == userID);
             if(totalExpensesPerCategoryToDelete != null)
             {
                 m_TotalExpensesPerCategoryService.DeleteExpensePerCategory(totalExpensesPerCategoryToDelete);

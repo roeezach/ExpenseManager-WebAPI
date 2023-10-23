@@ -37,20 +37,20 @@ namespace ExpensesManger.Services.Services
 
         public Dictionary<string, double> GetCategoriesSum(int month, int year, int userID)
         {
-            return m_AppDbContext.TotalExpensesPerCategory.Where(c => c.Year == year && c.Month == month && c.SW_UserID == userID && c.Total_Amount > 0)
+            return m_AppDbContext.TotalExpensesPerCategory.Where(c => c.Year == year && c.Month == month && c.UserID == userID && c.Total_Amount > 0)
                    .ToDictionary(key => key.Category, value => value.Total_Amount);
         }
 
         public double GetCategorySum(int month, int year, string category, int userID)
         {
             TotalExpensePerCategory? expensePerCategory = m_AppDbContext.TotalExpensesPerCategory.FirstOrDefault(c => c.Category == category && c.Year == year
-                                                                                                                        && c.Month == month && c.SW_UserID == userID);
+                                                                                                                        && c.Month == month && c.UserID == userID);
             return expensePerCategory == null ? -1 : expensePerCategory.Total_Amount;
         }
 
         public double GetTotalExpensesSum(int month, int year, int userId)
         {
-            var expensePerCategory = m_AppDbContext.TotalExpensesPerCategory.Where(total => total.Year == year && total.Month == month && total.SW_UserID == userId).ToList();
+            var expensePerCategory = m_AppDbContext.TotalExpensesPerCategory.Where(total => total.Year == year && total.Month == month && total.UserID == userId).ToList();
 
             return expensePerCategory == null ? INVALID_DIGIT : expensePerCategory.Sum(catSum => catSum.Total_Amount);
         }
@@ -65,7 +65,7 @@ namespace ExpensesManger.Services.Services
         {
             TotalExpensePerCategory? editedTotalExpensePerCategory = m_AppDbContext.TotalExpensesPerCategory.FirstOrDefault(c => c.Category == category && c.Year == year && c.Month == month);
             editedTotalExpensePerCategory.Category = expensePerCategory.Category;
-            editedTotalExpensePerCategory.SW_UserID = expensePerCategory.SW_UserID;
+            editedTotalExpensePerCategory.UserID = expensePerCategory.UserID;
             editedTotalExpensePerCategory.Month = expensePerCategory.Month;
             editedTotalExpensePerCategory.Year = expensePerCategory.Year;
             editedTotalExpensePerCategory.Total_Amount = expensePerCategory.Total_Amount;
@@ -119,7 +119,7 @@ namespace ExpensesManger.Services.Services
         public void DeleteAllTotalExpensesPerTimePeriod(DateTime fromDate, int userID)
         {
             List<TotalExpensePerCategory> totalExpenses = m_AppDbContext.TotalExpensesPerCategory.Where(tec => tec.Month == fromDate.Month
-                                                                           && tec.Year == fromDate.Year && tec.SW_UserID == userID).ToList();
+                                                                           && tec.Year == fromDate.Year && tec.UserID == userID).ToList();
             if (totalExpenses.Any())
             {
                 foreach (var totalExpense in totalExpenses)
@@ -151,7 +151,7 @@ namespace ExpensesManger.Services.Services
                 ItemID = Utils.GenerateRandomID(),
                 Total_Amount = recalculatedExpenses.Any() ? RecalaculatedExpenseCategoriesHandler(recalculatedExpenses, montlyExpensesInCateogry, userId) : montlyExpensesInCateogry.Sum(x => x.Debit_Amount),
                 Category = category.ToString(),
-                SW_UserID = userId,
+                UserID = userId,
                 Month = Convert.ToInt32(montlyExpensesInCateogry.FirstOrDefault().Linked_Month),
                 Year = dateOfCategory.Year
             };
@@ -180,7 +180,7 @@ namespace ExpensesManger.Services.Services
                 ItemID = Utils.GenerateRandomID(),
                 Total_Amount = recalculatedExpensesCurrUser.Sum(x => x.Owed_Share),
                 Category = category,
-                SW_UserID = userID,
+                UserID = userID,
                 Month = fromDate.Month,
                 Year = fromDate.Year
             };

@@ -7,6 +7,8 @@ using ExpensesManager.BuisnessLogic.Core;
 using ExpensesManger.Services.BuisnessLogic.Map;
 using ExpensesManger.Services.BuisnessLogic.Map.Common;
 using ExpensesManger.Services.Contracts;
+using Microsoft.AspNetCore.Http;
+
 
 namespace ExpensesManger.Services.Services
 {
@@ -18,6 +20,8 @@ namespace ExpensesManger.Services.Services
         private readonly ICategoryService m_CategoryService;
         private readonly IExpenseMapperFactory m_ExpenseMapperFactory;
         private readonly IServiceProvider m_ServiceProvider;
+        private readonly Users m_currUser;
+
 
         #endregion
         public ExpenseMapper Mapper { get; private set; }
@@ -25,7 +29,8 @@ namespace ExpensesManger.Services.Services
 
         #region Ctor
 
-        public ExpenseMapperService(AppDbContext context, ICategoryService categoryService, IExpenseMapperFactory expenseMapperFactory, IServiceProvider serviceProvider)
+        public ExpenseMapperService(AppDbContext context, ICategoryService categoryService, 
+        IExpenseMapperFactory expenseMapperFactory, IServiceProvider serviceProvider, IHttpContextAccessor httpContextAccessor)
         {
             m_AppDbContext = context;
             m_ExpenseMapperFactory = expenseMapperFactory;
@@ -33,6 +38,7 @@ namespace ExpensesManger.Services.Services
             m_ServiceProvider = serviceProvider;
             Mapper = new ExpenseMapper(serviceProvider);
             CategoryExpense = ExpenseMapperFactory.GetMapper<CategoryExpenseMapper>(m_ServiceProvider);
+            m_currUser = m_AppDbContext.Users.FirstOrDefault(u => u.Username == httpContextAccessor.HttpContext.User.Identity.Name);
         }
 
         #endregion

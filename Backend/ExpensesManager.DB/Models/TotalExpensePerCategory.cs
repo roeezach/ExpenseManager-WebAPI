@@ -6,7 +6,7 @@ namespace ExpensesManager.DB.Models
     {
         [Key]
         public int ItemID { get; set; }
-        public int SW_UserID { get; set; }
+        public int UserID { get; set; }
         public double Total_Amount { get; set; }
         public string Category { get; set; }
         public int Month { get; set; }

@@ -5,6 +5,7 @@ import recalculateExpenseService from '../../../services/recalculateExpenseServi
 import totalExpensePerCategoryService from '../../../services/totalExpensePerCategoryService';
 import { Button, Modal } from 'react-bootstrap';
 import { monthDayYearDateFormat } from '../../../utils/DateUtils'
+import { useAuth } from '../../../context/AuthContext';
 
 interface Props {
     fileName: string;
@@ -17,7 +18,7 @@ const UploadedFileMapping: React.FC<Props> = ({ fileName, fileType, chargedDate,
     const [loading, setLoading] = useState(false);
     const [mappingModalOpen, setMappingModalOpen] = useState(false);
     const [errorModalOpen, setErrorModalOpen] = useState(false); 
-
+    const { user } = useAuth();
   const handleButtonClick = async () => {
     console.log('clicked happened');
     
@@ -100,11 +101,10 @@ async function HandleSplitwiseExpenses(parsedDate: Date) {
 }
 
 async function HandleTotalsPerCategory(parsedDate: Date) {
-    const userId = parseInt(process.env.REACT_APP_USER_ID_TEMP, 10);
     const formattedFormDate = monthDayYearDateFormat(parsedDate)
-    const resGetTotalCategoriesSum = await totalExpensePerCategoryService.getCategoriesSumPerTimePeriod(parsedDate.getMonth() + 1, parsedDate.getFullYear(), userId);
+    const resGetTotalCategoriesSum = await totalExpensePerCategoryService.getCategoriesSumPerTimePeriod(parsedDate.getMonth() + 1, parsedDate.getFullYear(), user.userID);
     if (JSON.stringify(resGetTotalCategoriesSum) === '{}')
-        await totalExpensePerCategoryService.CreateCategoriesSum(formattedFormDate, userId);
+        await totalExpensePerCategoryService.CreateCategoriesSum(formattedFormDate, user.userID);
 }
 
 //TODO - make this component genric after implemenation of user managment

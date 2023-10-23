@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './EditCategory.module.css';
 import categoryService from '../../../services/categoryService';
 import { AiOutlineCloseCircle, AiOutlineEdit  } from 'react-icons/ai';
+import { useAuth } from '../../../context/AuthContext';
 
 interface Category {
   id: number;
@@ -13,15 +14,14 @@ const EditCategories: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [clickedCategories, setClickedCategories] = useState<number[]>([]);
   const [clickedEditCategories, setClickedEditCategories] = useState<number[]>([]);
+  const { user } = useAuth();
 
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const userId = parseInt(process.env.REACT_APP_USER_ID_TEMP, 10);
-        console.log(userId);
-         // TODO - adjust after user managment
-        const data = await categoryService.getUserCategories(userId);
+        console.log(user.userID);
+        const data = await categoryService.getUserCategories(user.userID);
         const parsedCategories = JSON.parse(data.mappedCategoriesJson);
         const categoriesArray: Category[] = parsedCategories.map((category: { CategoryName: string; Keywords: string[]; }) => ({
           name: category.CategoryName,

@@ -5,12 +5,13 @@ import PieChartComponent from '../../ui/Graph/PieGraph/PieGraph';
 import styles from './Overview.module.css';
 import totalExpensePerCategoryService from '../../../services/totalExpensePerCategoryService';
 import MonthYearSelector from '../../ui/MonthYearSelector/MonthYearSelector';
+import { useAuth } from '../../../context/AuthContext';
 
 const Homepage: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [monthData, setMonthData] = useState([]);
-
+  const { user } = useAuth();
   useEffect(() => {
     fetchMonthData(selectedMonth, selectedYear);
   }, [selectedMonth, selectedYear]);
@@ -18,9 +19,11 @@ const Homepage: React.FC = () => {
   const fetchMonthData = async (month: number, year: number) => {
     try {
       const currUserId = parseInt(process.env.REACT_APP_USER_ID_TEMP, 10);
+      console.log(`curr user id is ${user.userID}`);
+      
       console.log(`the month is ${month}`);
       
-      const data = await totalExpensePerCategoryService.getCategoriesSumPerTimePeriod(month, year, currUserId);
+      const data = await totalExpensePerCategoryService.getCategoriesSumPerTimePeriod(month, year, user.userID);
 
       if (data.length === 0) {
         console.log('No data available.');
@@ -81,7 +84,7 @@ const Homepage: React.FC = () => {
                     ))}
                     <tr>
                       <td><strong>Total Expenses Amount</strong></td>
-                      <td>{totalValue}</td>
+                      <td>{totalValue.toFixed(2)}₪</td>
                     </tr>
                   </tbody>
                 </table>

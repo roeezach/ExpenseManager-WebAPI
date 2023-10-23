@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExpensesManager.DB.Models
 {
@@ -10,6 +11,7 @@ namespace ExpensesManager.DB.Models
         [Required]
         public long SW_TransactionID { get; set; }
         [Required]
+        [ForeignKey("SplitwiseUserID")]
         public int SW_User_ID { get; set; }
         [Required]
         public double Total_Cost { get; set; }

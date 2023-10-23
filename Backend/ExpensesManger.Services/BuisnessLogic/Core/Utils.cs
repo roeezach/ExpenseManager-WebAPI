@@ -123,7 +123,8 @@ namespace ExpensesManager.BuisnessLogic.Core
         /// </summary>
         public static int GetUserChargeDay(int userID)
         {
-            if (userID == 19773792)
+            ///TODO - remove when we finish developing user settings.
+            if (userID == 344511326)
                 return 1;
             else
                 return 10;

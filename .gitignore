@@ -37,6 +37,7 @@
 bin/
 bin/Debug/
 obj/
+Properties/
 Migrations/
 Configurations/
 /.vs/ExpensesManager/v16
@@ -49,3 +50,4 @@ Configurations/
 .vs/
 .gitattributes
 .env
+.json

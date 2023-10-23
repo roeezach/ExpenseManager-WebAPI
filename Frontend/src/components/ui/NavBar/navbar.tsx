@@ -2,8 +2,18 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './navbar.module.css';
 import { FaHome, FaUpload, FaEdit, FaInfoCircle, FaCog, FaSignOutAlt } from 'react-icons/fa'; // Import the specific icons
+import { useAuth } from '../../../context/AuthContext';
 
-const Navbar: React.FC = () => (
+const Navbar: React.FC = () => 
+{
+  const { isLoggedIn } = useAuth();
+  console.log(`nav re-rendered`);
+  console.log(`isLoggedIn in navbar is ${isLoggedIn}`);
+  
+  if( !isLoggedIn)
+    return null;
+  
+  return (
   <div className="bg-gray-800 text-white h-screen w-64 flex flex-col">
     <div className="p-4">
       <h1 className="text-2xl font-bold">Sidebar</h1>
@@ -41,7 +51,7 @@ const Navbar: React.FC = () => (
           </NavLink>
         </li>
         <li className={styles.navbar_item}>
-          <NavLink to='/logout' className={styles.navLink} style={{ color:'white' , display:'flex', alignItems:'center', gap:'0.5rem', textDecoration:'none', marginBottom:'0.5rem'}}>
+          <NavLink to='/logout' className={styles.navLink} style={{ color:'white' , display:'flex', alignItems:'center', gap:'0.5rem', textDecoration:'none' ,marginBottom:'0.5rem'}}>
             <FaSignOutAlt />
             <span>Logout</span>
           </NavLink>
@@ -49,6 +59,8 @@ const Navbar: React.FC = () => (
       </ul>
     </nav>
   </div>
-);
+  );
+};
+    
 
 export default Navbar;

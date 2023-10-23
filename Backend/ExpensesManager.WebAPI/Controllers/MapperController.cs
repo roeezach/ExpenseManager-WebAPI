@@ -5,9 +5,12 @@ using System;
 using ExpensesManager.DB.Models;
 using ExpensesManger.Services.BuisnessLogic.Map.Common;
 using ExpensesManger.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace ExpensesManager.WebAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]/[action]")]
     public class MapperController : ControllerBase
@@ -15,7 +18,7 @@ namespace ExpensesManager.WebAPI.Controllers
         private readonly IExpenseMapperService m_ExpenseMapperService;
         private readonly IExpenseReaderService m_ExpenseReaderService;
 
-        public MapperController(IExpenseMapperService expenseMapperService, IExpenseReaderService expenseReaderService)
+        public MapperController(IExpenseMapperService expenseMapperService, IExpenseReaderService expenseReaderService, IHttpContextAccessor httpContextAccessor)
         {
             this.m_ExpenseMapperService = expenseMapperService;
             this.m_ExpenseReaderService = expenseReaderService;

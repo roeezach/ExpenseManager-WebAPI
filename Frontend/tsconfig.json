@@ -23,7 +23,7 @@
       }
     ]
   },
-  "types": ["node", "react", "react-dom", "webpack-env"],
+  "types": ["node", "react", "react-dom", "webpack-env", "@types/cookie"],
   "include": [
     "./src/**/*.tsx",
     "./src/**/*.ts",

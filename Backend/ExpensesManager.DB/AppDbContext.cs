@@ -33,8 +33,7 @@ namespace ExpensesManager.DB
 
         #region Methods
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-              => optionsBuilder.UseSqlite($"Data Source={DbPath}");
-
+              => optionsBuilder.UseSqlite($"Data Source={DbPath}");        
         #endregion
 
     }
