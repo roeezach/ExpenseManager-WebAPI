@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using ExpensesManager.DB;
 
 namespace ExpensesManager.BuisnessLogic.Core
 {
@@ -121,13 +122,13 @@ namespace ExpensesManager.BuisnessLogic.Core
         /// temportay fix to retrive user charge day, till login functionality will be implemnted
         /// TODO : Move logic to be stored in DB in users table
         /// </summary>
-        public static int GetUserChargeDay(int userID)
+        public static int GetUserChargeDay(int userID, AppDbContext appDbContext)
         {
-            ///TODO - remove when we finish developing user settings.
-            if (userID == 344511326)
-                return 1;
+            var chargeDay =  appDbContext.Users.FirstOrDefault( day => day.UserID == userID);
+            if (chargeDay == null)
+                    return -1;
             else
-                return 10;
+                return chargeDay.CreditCardChargeDay;
         }
 
         /// <summary>

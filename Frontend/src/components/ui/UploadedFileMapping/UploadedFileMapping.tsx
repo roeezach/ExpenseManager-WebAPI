@@ -19,12 +19,12 @@ const UploadedFileMapping: React.FC<Props> = ({ fileName, fileType, chargedDate,
     const [mappingModalOpen, setMappingModalOpen] = useState(false);
     const [errorModalOpen, setErrorModalOpen] = useState(false); 
     const { user } = useAuth();
-  const handleButtonClick = async () => {
+
+    const handleButtonClick = async () => {
     console.log('clicked happened');
-    
     try {
     setLoading(true);
-    await HanleFileExpenses(chargedDate, fileName, fileType);
+    await HanleFileExpenses(chargedDate, fileName, fileType , user.userID);
 
     const parsedDate = FixChargeDateToFromDate(chargedDate);
        
@@ -32,7 +32,7 @@ const UploadedFileMapping: React.FC<Props> = ({ fileName, fileType, chargedDate,
             
     await HandleRecalculation(parsedDate);
         
-    await HandleTotalsPerCategory(parsedDate);
+    await HandleTotalsPerCategory(parsedDate, user.userID);
      
     setLoading(false);
     setMappingModalOpen(true); 
@@ -67,14 +67,13 @@ const formatDate = (date:Date) => {
   return `${month}/${day}/${year}`;
 };
 
-async function HanleFileExpenses(chargedDate: Date, fileName: string, fileType: string) {
+async function HanleFileExpenses(chargedDate: Date, fileName: string, fileType: string, userId: number) {
     let isExpensesCreated = false;
     console.log(`the date is ${chargedDate}`);
-    
-    const monthlyExpensesResponse = await mapperService.getMonthlyExpenses(chargedDate);
+    const monthlyExpensesResponse = await mapperService.getMonthlyExpenses(chargedDate, user.userID);
     if (monthlyExpensesResponse.length === 0) {
         const formattedChargedDate = formatDate(chargedDate);
-        await mapperService.createMappedExpenses(fileName, fileType, formattedChargedDate);
+        await mapperService.createMappedExpenses(fileName, fileType, formattedChargedDate, userId);
         isExpensesCreated = true;
     }
 
@@ -100,27 +99,24 @@ async function HandleSplitwiseExpenses(parsedDate: Date) {
         await swExpensesService.createSplitwiseExpenses(formattedFormDate);
 }
 
-async function HandleTotalsPerCategory(parsedDate: Date) {
+const HandleTotalsPerCategory = async (parsedDate: Date, userId : number) => {
     const formattedFormDate = monthDayYearDateFormat(parsedDate)
-    const resGetTotalCategoriesSum = await totalExpensePerCategoryService.getCategoriesSumPerTimePeriod(parsedDate.getMonth() + 1, parsedDate.getFullYear(), user.userID);
+    const resGetTotalCategoriesSum = await totalExpensePerCategoryService.getCategoriesSumPerTimePeriod(parsedDate.getMonth() + 1, parsedDate.getFullYear(), userId);
     if (JSON.stringify(resGetTotalCategoriesSum) === '{}')
-        await totalExpensePerCategoryService.CreateCategoriesSum(formattedFormDate, user.userID);
+        await totalExpensePerCategoryService.CreateCategoriesSum(formattedFormDate, userId);
 }
 
-//TODO - make this component genric after implemenation of user managment
 return (
     <div>
       <Button onClick={handleButtonClick} disabled={loading}   style={{ background: 'white', color:'black' }}>
         {loading ? 'Mapping...' : 'Map'}
       </Button>
-      {/* Modal for Mapping Success */}
       <Modal show={mappingModalOpen} onHide={() => setMappingModalOpen(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Successful Mapping!</Modal.Title>
         </Modal.Header>
         <Modal.Body>Your expenses have been mapped successfully.</Modal.Body>
       </Modal>
-      {/* Modal for Error */}
       <Modal show={errorModalOpen} onHide={() => setErrorModalOpen(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Something Went Wrong</Modal.Title>

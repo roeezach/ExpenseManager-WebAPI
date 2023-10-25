@@ -7,6 +7,8 @@ using ExpensesManger.Services.BuisnessLogic.Map;
 using ExpensesManger.Services.Contracts;
 using Users = ExpensesManager.Integrations.SplitWiseModels.Users;
 using Microsoft.Extensions.Configuration;
+using ExcelDataReader.Log;
+using System.Diagnostics;
 
 namespace ExpensesManger.Services.Services
 {
@@ -73,10 +75,10 @@ namespace ExpensesManger.Services.Services
                 }
             }
 
-            foreach (var swRecord in swRecordItems)
+            if(swRecordItems.Any())
             {
-                appDbContext.Add(swRecord);
-                appDbContext.SaveChanges();
+                  appDbContext.AddRange(swRecordItems);
+                  appDbContext.SaveChanges();
             }
 
             return swRecordItems;
@@ -109,12 +111,14 @@ namespace ExpensesManger.Services.Services
         /// </summary>
         /// <param name="splitwiseExpenses"></param>
         /// <returns></returns>
-        private List<SwRecords> ParseSwExpenseToSwRecords(SplitwiseExpense splitwiseExpenses)
+        private List<SwRecords> ParseSwExpenseToSwRecords(SplitwiseExpense splitwiseExpenses )
         {
-            Users userPaid = splitwiseExpenses.Users.FirstOrDefault(user => user.User.ID == splitwiseExpenses.Created_By.id);
-            Users userOwed = splitwiseExpenses.Users.FirstOrDefault(user => user.User.ID != splitwiseExpenses.Created_By.id) ?? splitwiseExpenses.Users.FirstOrDefault();
-
-            var dateToCharge = Utils.RegexMatcherDateToCharge(splitwiseExpenses.Description, Utils.GetUserChargeDay(userPaid.User_ID), splitwiseExpenses.Created_At);
+            Users swUserPaid = splitwiseExpenses.Users.FirstOrDefault(user => user.User.ID == splitwiseExpenses.Created_By.id);
+            Users swUserOwed = splitwiseExpenses.Users.FirstOrDefault(user => user.User.ID != splitwiseExpenses.Created_By.id) ?? splitwiseExpenses.Users.FirstOrDefault();
+            var internalPaidUserId = appDbContext.Users.FirstOrDefault( user => user.SW_User_ID ==  swUserPaid.User_ID.ToString()).UserID;
+            var internalOwedUserId = appDbContext.Users.FirstOrDefault( user => user.SW_User_ID ==  swUserOwed.User_ID.ToString()).UserID;            
+            
+            var dateToCharge = Utils.RegexMatcherDateToCharge(splitwiseExpenses.Description, Utils.GetUserChargeDay(internalPaidUserId, appDbContext), splitwiseExpenses.Created_At);
 
             List<SwRecords> swRecords = new List<SwRecords>();
             CategoryExpenseMapper categoryExpenseMapper = new(m_CategoryService);
@@ -123,38 +127,37 @@ namespace ExpensesManger.Services.Services
             {
                 Internal_TransactionID = Utils.GenerateRandomID(),
                 SW_TransactionID = splitwiseExpenses.ID,
-                SW_User_ID = userPaid == null ? INVALID_DIGIT : userPaid.User_ID,
+                SW_User_ID = swUserPaid == null ? INVALID_DIGIT : swUserPaid.User_ID,
                 Total_Cost = Convert.ToDouble(splitwiseExpenses.Cost),
                 Creation_Method = splitwiseExpenses.Creation_Method,
-                Paid_Share = userPaid == null ? INVALID_DIGIT : Convert.ToDouble(userPaid.Paid_Share),
-                Owed_Share = userPaid == null ? INVALID_DIGIT : Convert.ToDouble(userPaid.Owed_Share),
+                Paid_Share = swUserPaid == null ? INVALID_DIGIT : Convert.ToDouble(swUserPaid.Paid_Share),
+                Owed_Share = swUserPaid == null ? INVALID_DIGIT : Convert.ToDouble(swUserPaid.Owed_Share),
                 Expense_Creation_Date = splitwiseExpenses.Created_At.ToString(),
                 Record_Creation_Date = DateTime.Now.ToString(),
                 Expense_Description = splitwiseExpenses.Description,
                 Linked_Month = dateToCharge.Month.ToString(),
                 Linked_Year = dateToCharge.Year.ToString(),
             };
-            swRecordsPaid.Category = categoryExpenseMapper.GetCategoryMapping(splitwiseExpenses.Description, swRecordsPaid.SW_User_ID).ToString();
+            swRecordsPaid.Category = categoryExpenseMapper.GetCategoryMapping(splitwiseExpenses.Description, internalPaidUserId).ToString();
 
-
-            dateToCharge = Utils.RegexMatcherDateToCharge(splitwiseExpenses.Description, Utils.GetUserChargeDay(userOwed.User_ID), splitwiseExpenses.Created_At);
+            dateToCharge = Utils.RegexMatcherDateToCharge(splitwiseExpenses.Description, Utils.GetUserChargeDay(swUserOwed.User_ID, appDbContext), splitwiseExpenses.Created_At);
 
             var swRecordsOwed = new SwRecords()
             {
                 Internal_TransactionID = Utils.GenerateRandomID(),
                 SW_TransactionID = splitwiseExpenses.ID,
-                SW_User_ID = userOwed == null ? INVALID_DIGIT : userOwed.User_ID,
+                SW_User_ID = swUserOwed == null ? INVALID_DIGIT : swUserOwed.User_ID,
                 Total_Cost = Convert.ToDouble(splitwiseExpenses.Cost),
                 Creation_Method = splitwiseExpenses.Creation_Method,
-                Paid_Share = userOwed == null ? INVALID_DIGIT : Convert.ToDouble(userOwed.Paid_Share),
-                Owed_Share = userOwed == null ? INVALID_DIGIT : Convert.ToDouble(userOwed.Owed_Share),
+                Paid_Share = swUserOwed == null ? INVALID_DIGIT : Convert.ToDouble(swUserOwed.Paid_Share),
+                Owed_Share = swUserOwed == null ? INVALID_DIGIT : Convert.ToDouble(swUserOwed.Owed_Share),
                 Expense_Creation_Date = splitwiseExpenses.Created_At.ToString(),
                 Record_Creation_Date = DateTime.Now.ToString(),
                 Expense_Description = splitwiseExpenses.Description,
                 Linked_Month = dateToCharge.Month.ToString(),
                 Linked_Year = dateToCharge.Year.ToString(),
             };
-            swRecordsOwed.Category = categoryExpenseMapper.GetCategoryMapping(splitwiseExpenses.Description, swRecordsOwed.SW_User_ID).ToString();
+            swRecordsOwed.Category = categoryExpenseMapper.GetCategoryMapping(splitwiseExpenses.Description, internalOwedUserId).ToString();
 
 
             swRecords.Add(swRecordsPaid);

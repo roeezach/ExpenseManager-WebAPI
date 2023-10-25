@@ -94,7 +94,7 @@ namespace ExpensesManger.Services.Services
 
         #region Internal Methods
 
-        internal static ExpenseRecord SetExpenseMapperToExpenseRecord(ExpenseMapper expenseMapper, int userID, DateTime chargedDate)
+        internal ExpenseRecord SetExpenseMapperToExpenseRecord(ExpenseMapper expenseMapper, int userID, DateTime chargedDate)
         {
             string month = expenseMapper.TransactionDate.HasValue ? Utils.GetExpenseLinkedMonth(expenseMapper.TransactionDate.Value, chargedDate).ToString() : "-1";
             string? exchangeDescription = Utils.ReformatHebrewString(expenseMapper.ExchangeDescription);
@@ -114,7 +114,7 @@ namespace ExpensesManger.Services.Services
                 Category = expenseMapper.CategoryData.CategoryKey,
                 Linked_Month = month,
                 User_ID = userID,
-                Linked_Year = Utils.GetExpenseLinkedYearAsDateTime(expenseMapper.TransactionDate.Value, Utils.GetUserChargeDay(userID), Convert.ToInt32(month)).Year.ToString()
+                Linked_Year = Utils.GetExpenseLinkedYearAsDateTime(expenseMapper.TransactionDate.Value, Utils.GetUserChargeDay(userID, m_AppDbContext), Convert.ToInt32(month)).Year.ToString()
             };
 
             if (!string.IsNullOrEmpty(expenseMapper.ExchangeDescription))
