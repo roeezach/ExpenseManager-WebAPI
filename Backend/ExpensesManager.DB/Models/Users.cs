@@ -15,6 +15,8 @@ namespace ExpensesManager.DB.Models
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
+        [Required]
+        public int CreditCardChargeDay { get; set; }
         public string SplitwisePassword { get; set; }
         public string SW_User_ID { get; set; }
     }

@@ -17,12 +17,8 @@ const Homepage: React.FC = () => {
   }, [selectedMonth, selectedYear]);
 
   const fetchMonthData = async (month: number, year: number) => {
-    try {
-      const currUserId = parseInt(process.env.REACT_APP_USER_ID_TEMP, 10);
-      console.log(`curr user id is ${user.userID}`);
-      
+    try {      
       console.log(`the month is ${month}`);
-      
       const data = await totalExpensePerCategoryService.getCategoriesSumPerTimePeriod(month, year, user.userID);
 
       if (data.length === 0) {
