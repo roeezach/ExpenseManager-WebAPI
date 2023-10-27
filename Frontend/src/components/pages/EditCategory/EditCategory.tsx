@@ -20,20 +20,23 @@ const EditCategories: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        console.log(user.userID);
-        const data = await categoryService.getUserCategories(user.userID);
-        const parsedCategories = JSON.parse(data.mappedCategoriesJson);
-        const categoriesArray: Category[] = parsedCategories.map((category: { CategoryName: string; Keywords: string[]; }) => ({
-          name: category.CategoryName,
-          keywords: category.Keywords,
-        }));
-        setCategories(categoriesArray);
+        if(user)
+        {
+          console.log(user.userID);
+          const data = await categoryService.getUserCategories(user.userID);
+          const parsedCategories = JSON.parse(data.mappedCategoriesJson);
+          const categoriesArray: Category[] = parsedCategories.map((category: { CategoryName: string; Keywords: string[]; }) => ({
+            name: category.CategoryName,
+            keywords: category.Keywords,
+          }));
+          setCategories(categoriesArray);
+        }        
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
     };
     fetchCategories();
-  }, []);
+  }, [user]);
 
   const handleDeleteCategory = (categoryId: number) => {
     setClickedCategories((prevClickedCategories) => {

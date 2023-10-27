@@ -1,13 +1,11 @@
 import React from 'react';
-import styles from './Header.module.css'; // Import the styles
-import { useAuth } from '../../../context/AuthContext'; // Import your AuthContext
+import styles from './Header.module.css'; 
+import { useAuth } from '../../../context/AuthContext';
 
 const Header: React.FC = () => {
-  const { user } = useAuth(); 
-
-  const renderGreeting = () => {
-    const { isLoggedIn } = useAuth(); // Get the isLoggedIn state from your context
+  const { isLoggedIn, user } = useAuth(); 
   
+  const renderGreeting = () => { 
     if (isLoggedIn && user) {
       return (
         <span className={styles.greeting}>Hello, {user.username}</span>

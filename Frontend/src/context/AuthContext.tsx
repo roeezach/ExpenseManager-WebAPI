@@ -1,6 +1,7 @@
 import Cookies from 'universal-cookie';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
+
 interface AuthContextType {
   isLoggedIn: boolean;
   setIsLoggedInData: (value: boolean) => void;
@@ -25,6 +26,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const setUserData = (userData: User | null) => {
     setUser(userData);
+    if (userData) {
+      localStorage.setItem('currentUser', JSON.stringify(userData));
+    } else {
+      localStorage.removeItem('currentUser');
+    }
   };
 
   const setIsLoggedInData = (value: boolean) => {
@@ -35,13 +41,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const cookie = new Cookies();
     const token = cookie.get('token');
-    console.log('Token from cookie:', token);
-
-    if (token)
-        setIsLoggedInData(true);
-    else
-        setIsLoggedIn(false);
+    if (token) {
+      setIsLoggedInData(true);
+      const user = localStorage.getItem('currentUser'); 
+      setUserData(user ? JSON.parse(user) : null); 
+      console.log(`username is ${user}`);
+    } else {
+      setIsLoggedIn(false);
+    }
   }, [isLoggedIn]);
+  
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedInData, user, setUserData }}>
