@@ -1,22 +1,26 @@
 import React, { useState, useRef , useEffect } from "react";
-import styles from "../../pages/UploadFiles/UploadFiles.module.css"; // Import module.css styles
-import fileUploadStyles from "./FileUploadOptions.module.css"; // Import fileUploadOption.module.css
+import styles from "../../pages/UploadFiles/UploadFiles.module.css"; 
+import fileUploadStyles from "./FileUploadOptions.module.css";
 import readerService from "../../../services/readerService";
 import MonthYearSelector from "../MonthYearSelector/MonthYearSelector";
 import { Modal } from 'react-bootstrap';
 import { useAuth } from "../../../context/AuthContext";
 
-const DragDropFiles: React.FC = () => {
+interface FileUploadOptionsProps {
+  onUploadSuccess: (value : boolean) => void;
+}
+
+const FileUploadOptions: React.FC<FileUploadOptionsProps> = ({ onUploadSuccess }) => {
   const currentDate = new Date();
-  const defaultMonth = currentDate.getMonth() + 1; // Months are zero-based, so add 1
+  const defaultMonth = currentDate.getMonth() + 1;
   const defaultYear = currentDate.getFullYear();
 
   const [files, setFiles] = useState<FileList | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [bankType, setBankType] = useState<string>(""); // Add bank type state
+  const [bankType, setBankType] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<number>(defaultMonth);
   const [selectedYear, setSelectedYear] = useState<number>(defaultYear);
-  const [showSuccessModal, setShowSuccessModal] = useState(false); // State for success modal
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { user } = useAuth();
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -38,7 +42,9 @@ const DragDropFiles: React.FC = () => {
     setSelectedMonth(defaultMonth);
     setSelectedYear(defaultYear);
     setShowSuccessModal(false);
+    onUploadSuccess(true);
   };
+  
   useEffect(() => {
     if (showSuccessModal) {
       const resetTimeout = setTimeout(() => {
@@ -49,12 +55,15 @@ const DragDropFiles: React.FC = () => {
       return () => clearTimeout(resetTimeout);
     }
   }, [showSuccessModal]);
+
   const handleUpload = async (bankType:string, selectedMonth:number, selectedYear:number) => {
     if (files) {
       const file = files[0];
       try {
-        const response = await readerService.createFilesPath(file, user.userID,bankType, selectedMonth, selectedYear);
+        const response = await readerService.createFilesPath(file, user.userID, bankType, selectedMonth, selectedYear);
         console.log('Upload successful:', response);
+        onUploadSuccess(true);
+        console.log(`onUploadSuccess suppose to be called `);        
         setShowSuccessModal(true);
       } catch (error) {
         console.error('Upload failed:', error);
@@ -122,4 +131,4 @@ const DragDropFiles: React.FC = () => {
   );
 };
 
-export default DragDropFiles;
+export default FileUploadOptions;

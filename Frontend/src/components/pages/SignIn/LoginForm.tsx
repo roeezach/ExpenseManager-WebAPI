@@ -33,6 +33,7 @@ const LoginForm: React.FC = () => {
       const response = await usersService.SignIn(formData);
       console.log('Login successful:', response);      
       cookie.set('token', response.token);
+      cookie.set('username', response.username);
       setUserData(response.username ? { username: response.username , userID: response.userID } : null);
       setIsLoggedInData(true);
       console.log(`after the change: ${isLoggedIn}`);      

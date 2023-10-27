@@ -12,11 +12,15 @@ const Homepage: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [monthData, setMonthData] = useState([]);
   const { user } = useAuth();
+  
   useEffect(() => {
     fetchMonthData(selectedMonth, selectedYear);
-  }, [selectedMonth, selectedYear]);
+  }, [selectedMonth, selectedYear, user]);
 
   const fetchMonthData = async (month: number, year: number) => {
+    if (!user) {
+      return;
+    }
     try {      
       console.log(`the month is ${month}`);
       const data = await totalExpensePerCategoryService.getCategoriesSumPerTimePeriod(month, year, user.userID);

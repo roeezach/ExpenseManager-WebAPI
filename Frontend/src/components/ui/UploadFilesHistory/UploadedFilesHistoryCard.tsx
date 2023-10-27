@@ -6,34 +6,45 @@ import UploadedFileMapping from '../UploadedFileMapping/UploadedFileMapping';
 import { Modal } from 'react-bootstrap';
 import { useAuth } from '../../../context/AuthContext';
 
-const UploadedFilesHistoryCard = () => {
+const UploadedFilesHistoryCard: React.FC<{ shouldUpdate: boolean , setShouldUpdate : (flag: boolean) => void }> = ({ shouldUpdate , setShouldUpdate}) => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  
   const [mappingModalOpen, setMappingModalOpen] = useState(false);
   const { user } = useAuth();
+  
   useEffect(() => {
-    const fetchUploadedFiles = async () => {
-      try {
+    if (shouldUpdate && user) {
+      console.log(`should update ${shouldUpdate}`);      
+      fetchUploadedFiles();
+      setShouldUpdate(false);
+    }
+    else
+      fetchUploadedFiles();
+  }, [shouldUpdate, user]);
+
+  const fetchUploadedFiles = async () => {
+    try {
+      if(user)
+      {
         const data = await readerService.getUploadedFiles(user.userID);
         setUploadedFiles(data);
-      } catch (error) {
-        console.error('Error fetching uploaded files:', error);
       }
-    };
-    fetchUploadedFiles();
-  }, []);
-
+    } catch (error) {
+      console.error('Error fetching uploaded files:', error);
+    }
+  };
+  
   const formatUploadDate = (uploadDate: Date) => {
     const date = new Date(uploadDate);
     const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
     return formattedDate;
   };
 
-
   const handleMappingFinish = () => {
     setMappingModalOpen(false);
+    fetchUploadedFiles();
   };
   
-
   return (
     <div className={`${styles.card}`}>
       <div className="dropzone">
@@ -68,7 +79,6 @@ const UploadedFilesHistoryCard = () => {
           </tbody>
         </table>
       </div>
-      {/* Modal for Success Message */}
       <Modal show={mappingModalOpen} onHide={handleMappingFinish}>
         <Modal.Header closeButton>
           <Modal.Title>Mapping Successful</Modal.Title>
