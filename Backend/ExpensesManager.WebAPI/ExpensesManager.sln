@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesManager.WebAPI", "E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesManger.Services", "..\ExpensesManger.Services\ExpensesManger.Services.csproj", "{C5C7FE34-11D6-4DAE-B3F8-04605CBBDD9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpensesManager.DB", "..\ExpensesManager.DB\ExpensesManager.DB.csproj", "{5F6FEC83-7807-4D59-BB3A-0474E4DD5432}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesManager.DB", "..\ExpensesManager.DB\ExpensesManager.DB.csproj", "{5F6FEC83-7807-4D59-BB3A-0474E4DD5432}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseManger.Automation", "..\ExpenseManger.Automation\ExpenseManger.Automation.csproj", "{FA46232A-816C-4B11-B1C3-42E6E10B7F2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{5F6FEC83-7807-4D59-BB3A-0474E4DD5432}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F6FEC83-7807-4D59-BB3A-0474E4DD5432}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F6FEC83-7807-4D59-BB3A-0474E4DD5432}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA46232A-816C-4B11-B1C3-42E6E10B7F2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA46232A-816C-4B11-B1C3-42E6E10B7F2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA46232A-816C-4B11-B1C3-42E6E10B7F2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA46232A-816C-4B11-B1C3-42E6E10B7F2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
