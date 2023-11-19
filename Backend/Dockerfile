@@ -2,16 +2,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 as builder
 WORKDIR /app
 
+# Create a backend folder and set it as the working directory
+WORKDIR /app/backend
+
 # Copy only the necessary files for the build context
-COPY ./ExpensesManager.WebAPI/*.csproj ./ExpensesManager.WebAPI/
-COPY ./ExpensesManager.DB/*.csproj ./ExpensesManager.DB/
-COPY ./ExpensesManger.Services/*.csproj ./ExpensesManger.Services/
-COPY ./ExpenseManger.Automation/*.csproj ./ExpenseManger.Automation/
+COPY ../ExpensesManager.WebAPI/*.csproj ./ExpensesManager.WebAPI/
+COPY ../ExpensesManager.DB/*.csproj ./ExpensesManager.DB/
+COPY ../ExpensesManger.Services/*.csproj ./ExpensesManger.Services/
+COPY ../ExpenseManger.Automation/*.csproj ./ExpenseManger.Automation/
 
 # Restore dependencies
 RUN dotnet restore ExpensesManager.WebAPI/ExpensesManager.WebAPI.csproj
 
-COPY . ./
+COPY ../ ./
 
 # Build projects
 RUN dotnet publish ExpensesManager.WebAPI/ExpensesManager.WebAPI.csproj -c Release -o /app/out
@@ -30,7 +33,7 @@ COPY --from=builder /app/out .
 RUN mkdir /app/data
 
 # Copy SQLite database into the container
-COPY ./ExpensesManager.DB/ExpensesManagerApp.db /app/data/
+COPY ../ExpensesManager.DB/ExpensesManagerApp.db /app/data/
 
 # Expose ports
 EXPOSE 80
