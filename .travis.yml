@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  # Build and run tests for the backend
+  - docker build -t roeezach/expenser-backend -f ./backend/Dockerfile ./backend
+  - docker run roeezach/expenser-backend dotnet test backend/ExpenseManger.Automation/ExpenseManger.Automation.csproj
+
+  # Build and run tests for the frontend
+  - docker build -t roeezach/expenser-frontend -f ./frontend/Dockerfile ./frontend
+  # Add commands to run frontend tests if applicable
+
+script:
+  # Add additional script commands if needed
+
+after_success:
+  # Build and push Docker images to Docker Hub
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push roeezach/expenser-backend
+  - docker push roeezach/expenser-frontend

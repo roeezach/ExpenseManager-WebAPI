@@ -74,40 +74,6 @@ namespace ExpenseManger.Automation.Features
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Two Numbers addition")]
-        [NUnit.Framework.TestCaseAttribute("iteration 1", "1", "2", null)]
-        public void TwoNumbersAddition(string name, string num1, string num2, string[] exampleTags)
-        {
-            string[] tagsOfScenario = exampleTags;
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("Name", name);
-            argumentsOfScenario.Add("num1", num1);
-            argumentsOfScenario.Add("num2", num2);
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Two Numbers addition", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 4
-    this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 5
-    testRunner.Given(string.Format("I get {0} and {1}", num1, num2), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 6
-    testRunner.When("I add them", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 7
-    testRunner.Then("the result is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("01 - date consistency")]
         [NUnit.Framework.TestCaseAttribute("iteration 1", "1", "2023", null)]
         [NUnit.Framework.TestCaseAttribute("iteration 2", "2", "2023", null)]
@@ -129,7 +95,7 @@ namespace ExpenseManger.Automation.Features
             argumentsOfScenario.Add("Month", month);
             argumentsOfScenario.Add("Year", year);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("01 - date consistency", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 14
+#line 3
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -139,13 +105,13 @@ namespace ExpenseManger.Automation.Features
             else
             {
                 this.ScenarioStart();
-#line 15
+#line 4
     testRunner.Given("I have a SQLite database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 16
+#line 5
     testRunner.When(string.Format("there is data for {0} and {1} in the dev database", month, year), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 17
+#line 6
     testRunner.Then("the linked months and linked year should be consistent with the transaction date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }

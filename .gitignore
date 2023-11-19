@@ -51,3 +51,4 @@ Configurations/
 .gitattributes
 .env
 .json
+*.db
