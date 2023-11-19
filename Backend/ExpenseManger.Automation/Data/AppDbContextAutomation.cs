@@ -34,8 +34,23 @@ namespace ExpensesManager.Automation
 
         #region Methods
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-              => optionsBuilder.UseSqlite($"Data Source={DbPath}");
-        #endregion
+        {
+            // Check if running in a Docker container
+            bool inDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
 
+            // Configure the database path based on the environment
+            if (inDocker)
+            {
+                // Use the specific path within the container for the SQLite database
+                optionsBuilder.UseSqlite($"Data Source=/app/data/ExpensesManagerApp.db");
+            }
+            else
+            {
+                // Use the local development path for the SQLite database
+                optionsBuilder.UseSqlite($"Data Source={DbPath}");
+            }
+        }
+        
+        #endregion
     }
 }
