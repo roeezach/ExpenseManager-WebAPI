@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   backend:
-    image: roee-zach/backend:latest
+    image: roeezach/expenser-backend:latest
     build:
       context: .
       dockerfile: Backend/ExpensesManager.WebAPI/Dockerfile
@@ -15,7 +15,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
 
   automation:
-    image: roee-zach/backend-automation:latest
+    image: roeezach/expenser-be-tests:latest
     build:
       context: .
       dockerfile: ./Backend/ExpensesManager.Automation/Dockerfile.test
@@ -27,7 +27,7 @@ services:
       ConnectionStrings__DefaultConnection: "Data Source=/app/data/ExpensesManagerApp.db;"
 
   frontend:
-    image: roee-zach/frontend:latest
+    image: roeezach/expenser-frontend:latest
     build:
       context: ./Frontend
       dockerfile: Dockerfile
