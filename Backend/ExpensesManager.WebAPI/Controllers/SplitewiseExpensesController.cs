@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using ExpensesManager.DB.Models;
-using ExpensesManger.Services.Contracts;
+using ExpensesManager.Services.Contracts;
 
 namespace ExpensesManager.WebAPI.Controllers
 {

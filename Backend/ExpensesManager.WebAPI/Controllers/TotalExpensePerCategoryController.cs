@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using ExpensesManager.DB.Models;
-using ExpensesManger.Services.Contracts;
+using ExpensesManager.Services.Contracts;
 
 namespace ExpensesManager.WebAPI.Controllers
 {
@@ -20,13 +20,13 @@ namespace ExpensesManager.WebAPI.Controllers
             m_ExpenseMapperService = expenseMapperService;
         }
 
-        [HttpGet("{month:int}/{year:int}",Name = "GetCategoriesSumPerTimePeriod")]
-        public IActionResult GetCategoriesSumPerTimePeriod(int month, int year,int userID)
+        [HttpGet("{month:int}/{year:int}", Name = "GetCategoriesSumPerTimePeriod")]
+        public IActionResult GetCategoriesSumPerTimePeriod(int month, int year, int userID)
         {
             return Ok(m_TotalExpensesPerCategoryService.GetCategoriesSum(month, year, userID));
         }
 
-        [HttpGet("{category}/{month:int}/{year:int}",Name = "GetCategoriesSum")]
+        [HttpGet("{category}/{month:int}/{year:int}", Name = "GetCategoriesSum")]
         public IActionResult GetCategoriesSum(int month, int year, string category, int userID)
         {
             return Ok(m_TotalExpensesPerCategoryService.GetCategorySum(month, year, category, userID));
@@ -46,11 +46,11 @@ namespace ExpensesManager.WebAPI.Controllers
 
         [HttpPost]
         public IActionResult CreateTotalExpensesPerCategories(DateTime fromDate, int userID)
-        {            
+        {
             List<ExpenseRecord> currentTotalCategoryExpense = m_ExpenseMapperService.GetMapExpenses();
             var totalExpensesToCreate = currentTotalCategoryExpense
                 .Where(e => (Convert.ToInt32(e.Linked_Month) == fromDate.Month) && DateTime.Parse(e.Transaction_Date).Year == fromDate.Year).ToList();
-            
+
             var createdTotalExpensesPerCategory = m_TotalExpensesPerCategoryService.CreateTotalExpensesPerCategory(totalExpensesToCreate, fromDate, userID);
 
             return CreatedAtRoute("GetCategories", new { totalExpensePerCategoryTime = fromDate }, createdTotalExpensesPerCategory);
@@ -59,9 +59,9 @@ namespace ExpensesManager.WebAPI.Controllers
         [HttpDelete]
         public IActionResult DeleteTotalExpensePerCategory(DateTime timePeriod, string catrgory, int userID)
         {
-            var totalExpensesPerCategoryToDelete = m_TotalExpensesPerCategoryService.GetTotalCategories().FirstOrDefault(e => (Convert.ToInt32(e.Month) == timePeriod.Month) 
+            var totalExpensesPerCategoryToDelete = m_TotalExpensesPerCategoryService.GetTotalCategories().FirstOrDefault(e => (Convert.ToInt32(e.Month) == timePeriod.Month)
                                                                                        && e.Year == timePeriod.Year && e.Category == catrgory && e.UserID == userID);
-            if(totalExpensesPerCategoryToDelete != null)
+            if (totalExpensesPerCategoryToDelete != null)
             {
                 m_TotalExpensesPerCategoryService.DeleteExpensePerCategory(totalExpensesPerCategoryToDelete);
                 return Ok();
@@ -77,7 +77,7 @@ namespace ExpensesManager.WebAPI.Controllers
 
             if (totalExpensesPerCategoryToDelete != null)
             {
-                m_TotalExpensesPerCategoryService.DeleteAllTotalExpensesPerTimePeriod(fromDate,userId);
+                m_TotalExpensesPerCategoryService.DeleteAllTotalExpensesPerTimePeriod(fromDate, userId);
                 return Ok();
             }
 
@@ -85,9 +85,9 @@ namespace ExpensesManager.WebAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditTotalExpensePerCategory(TotalExpensePerCategory expensePerCategory,DateTime timePeriod, string category)
+        public IActionResult EditTotalExpensePerCategory(TotalExpensePerCategory expensePerCategory, DateTime timePeriod, string category)
         {
             return Ok(m_TotalExpensesPerCategoryService.EditTotalExpensePerCategory(expensePerCategory, category, timePeriod.Month, timePeriod.Year));
-        }        
+        }
     }
 }

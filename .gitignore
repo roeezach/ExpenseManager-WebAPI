@@ -51,3 +51,5 @@ Configurations/
 .gitattributes
 .env
 .json
+ExpensesManagerApp.db
+/Properties/launchSettings.json

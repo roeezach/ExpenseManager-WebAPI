@@ -5,11 +5,11 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesManager.WebAPI", "ExpensesManager.WebAPI.csproj", "{AB56D635-DB0B-4E9E-A98B-15D093ED938A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesManger.Services", "..\ExpensesManger.Services\ExpensesManger.Services.csproj", "{C5C7FE34-11D6-4DAE-B3F8-04605CBBDD9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesManager.Services", "..\ExpensesManager.Services\ExpensesManager.Services.csproj", "{C5C7FE34-11D6-4DAE-B3F8-04605CBBDD9A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesManager.DB", "..\ExpensesManager.DB\ExpensesManager.DB.csproj", "{5F6FEC83-7807-4D59-BB3A-0474E4DD5432}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpenseManger.Automation", "..\ExpenseManger.Automation\ExpenseManger.Automation.csproj", "{FA46232A-816C-4B11-B1C3-42E6E10B7F2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesManager.Automation", "..\ExpensesManager.Automation\ExpensesManager.Automation.csproj", "{FA46232A-816C-4B11-B1C3-42E6E10B7F2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

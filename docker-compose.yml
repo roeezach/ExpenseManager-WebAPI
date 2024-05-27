@@ -1,0 +1,44 @@
+version: "3.4"
+
+services:
+  db:
+    image: roeezach/expensesmanager-db:latest
+    volumes:
+      - dbdata:/app/data
+    environment:
+      - DB_PATH=/app/data/ExpensesManagerApp.db
+  backend:
+    image: roeezach/expenser-backend:latest
+    build:
+      context: .
+      dockerfile: Backend/ExpensesManager.WebAPI/Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - dbdata:/app/data
+    environment:
+      - DB_PATH=/app/data/ExpensesManager.DB
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  automation:
+    image: roeezach/expenser-be-tests:latest
+    build:
+      context: .
+      dockerfile: ./Backend/ExpensesManager.Automation/Dockerfile.test
+    depends_on:
+      - backend
+    volumes:
+      - dbdata:/app/data
+    environment:
+      ConnectionStrings__DefaultConnection: "Data Source=/app/data/ExpensesManagerApp.db;"
+
+  frontend:
+    image: roeezach/expenser-frontend:latest
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+
+volumes:
+  dbdata: {}
