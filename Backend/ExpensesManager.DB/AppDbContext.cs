@@ -7,11 +7,10 @@ namespace ExpensesManager.DB
     public class AppDbContext : DbContext
     {
 
-
         #region Properties
         public DbSet<ExpenseRecord> Expenses { get; set; }
         public DbSet<Categories> Categories { get; set; }
-        public DbSet <SwRecords> SpliteWise{ get; set; }
+        public DbSet<SwRecords> SpliteWise{ get; set; }
         public DbSet<TotalExpensePerCategory> TotalExpensesPerCategory { get; set; }
         public DbSet<Users> Users { get; set; }
         public DbSet<RecalculatedExpenseRecord> RecalculatedExpenseRecords{ get; set; }

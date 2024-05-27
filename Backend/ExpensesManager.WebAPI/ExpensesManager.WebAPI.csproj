@@ -34,15 +34,14 @@
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.116" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.14" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ExpensesManager.DB\ExpensesManager.DB.csproj" />
-    <ProjectReference Include="..\ExpensesManger.Services\ExpensesManger.Services.csproj" />
+    <ProjectReference Include="..\ExpensesManager.Services\ExpensesManager.Services.csproj" />
+    <ProjectReference Include="..\ExpensesManager.Automation\ExpensesManager.Automation.csproj" />
   </ItemGroup>
-
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

@@ -5,9 +5,9 @@ using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System;
 using ExpensesManager.DB;
-using ExpensesManger.Services.BuisnessLogic.Map;
-using ExpensesManger.Services.Contracts;
-using ExpensesManger.Services.Services;
+using ExpensesManager.Services.BuisnessLogic.Map;
+using ExpensesManager.Services.Contracts;
+using ExpensesManager.Services.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -20,22 +20,22 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>();
 
-builder.Services.AddTransient<IExpenseReaderService, ExpenseReadService> ();
+builder.Services.AddTransient<IExpenseReaderService, ExpenseReadService>();
 builder.Services.AddTransient<IExpenseMapperService, ExpenseMapperService>();
 builder.Services.AddTransient<ITotalExpensesPerCategoryService, TotalExpensesPerCategoryService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ISplitwiseExpensesService, SplitewiseExpenseService>();
 builder.Services.AddTransient<IRecalculatedExpenseService, RecalculatedExpenseService>();
-builder.Services.AddTransient<IUsersService,UsersService>();
-builder.Services.AddTransient<IPasswordHasher,PasswordHasher>();
-builder.Services.AddTransient<IHttpContextAccessor,HttpContextAccessor>();
+builder.Services.AddTransient<IUsersService, UsersService>();
+builder.Services.AddTransient<IPasswordHasher, PasswordHasher>();
+builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IExpenseMapperFactory, ExpenseMapperFactory>();
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(c => 
+builder.Services.AddSwaggerGen(c =>
     {
-    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+        c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     });
 
 string secret = builder.Configuration.GetSection("Secrets")["JWT_SECRET"];
@@ -59,7 +59,7 @@ builder.Services.AddAuthentication(opts =>
 
 var app = builder.Build();
 
-if(app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -86,5 +86,5 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapDefaultControllerRoute();
 });
- 
+
 app.Run();

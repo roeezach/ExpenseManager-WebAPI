@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ExpensesManger.Services.Contracts;
+using ExpensesManager.Services.Contracts;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 
