@@ -29,11 +29,6 @@ WORKDIR /app/out
 # Copy the published output from the build stage
 COPY --from=builder /app/out .
 
-
-# Ensure the database directory exists and copy the database
-RUN mkdir -p /app/data
-COPY Backend/ExpensesManager.DB/ExpensesManagerApp.db /app/data/ExpensesManagerApp.db
-
 # Expose ports
 EXPOSE 80
 EXPOSE 443
