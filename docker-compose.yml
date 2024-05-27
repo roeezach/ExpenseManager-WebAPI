@@ -1,6 +1,12 @@
 version: "3.4"
 
 services:
+  db:
+    image: roeezach/expensesmanager-db:latest
+    volumes:
+      - dbdata:/app/data
+    environment:
+      - DB_PATH=/app/data/ExpensesManagerApp.db
   backend:
     image: roeezach/expenser-backend:latest
     build:
@@ -35,4 +41,4 @@ services:
       - "3000:3000"
 
 volumes:
-  dbdata:
+  dbdata: {}

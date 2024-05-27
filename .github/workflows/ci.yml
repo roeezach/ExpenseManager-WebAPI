@@ -41,4 +41,5 @@ jobs:
           docker-compose push
           docker push roeezach/expenser-backend
           docker push roeezach/expenser-frontend
+          docker push roeezach/expenser-db
           docker push roeezach/expenser-be-tests

@@ -10,10 +10,10 @@ namespace ExpensesManager.DB
         #region Properties
         public DbSet<ExpenseRecord> Expenses { get; set; }
         public DbSet<Categories> Categories { get; set; }
-        public DbSet<SwRecords> SpliteWise{ get; set; }
+        public DbSet<SwRecords> SpliteWise { get; set; }
         public DbSet<TotalExpensePerCategory> TotalExpensesPerCategory { get; set; }
         public DbSet<Users> Users { get; set; }
-        public DbSet<RecalculatedExpenseRecord> RecalculatedExpenseRecords{ get; set; }
+        public DbSet<RecalculatedExpenseRecord> RecalculatedExpenseRecords { get; set; }
         public DbSet<UploadedFile> UploadedFiles { get; set; }
         public string DbPath { get; }
 
@@ -34,7 +34,7 @@ namespace ExpensesManager.DB
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-                 // Check if running in a Docker container
+            // Check if running in a Docker container
             bool inDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
 
             // Configure the database path based on the environment
@@ -47,9 +47,9 @@ namespace ExpensesManager.DB
             {
                 // Use the local development path for the SQLite database
                 optionsBuilder.UseSqlite($"Data Source={DbPath}");
-            }        
-        } 
-                
+            }
+        }
+
         #endregion
 
     }
