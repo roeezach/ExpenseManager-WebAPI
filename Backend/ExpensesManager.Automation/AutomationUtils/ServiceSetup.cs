@@ -31,7 +31,7 @@ namespace ExpenseManager.Automation.Utils
             builder.AddEnvironmentVariables();
 
             IConfigurationRoot config = builder.Build();
-            
+
             RegisterServices(serviceCollection, config);
 
             return serviceCollection.BuildServiceProvider();
@@ -60,8 +60,6 @@ namespace ExpenseManager.Automation.Utils
                 client.BaseAddress = new Uri(baseUri.ToString());
             });
 
-            // Register ApiClient with Dependency Injection
-            //serviceCollection.AddTransient<ApiClient>();
         }
 
         private static string BuildBasePath()
@@ -75,10 +73,11 @@ namespace ExpenseManager.Automation.Utils
 
             if (!Directory.Exists(basePath))
             {
-                throw new DirectoryNotFoundException($"The specified directory does not exist: {basePath}");
+                // throw new DirectoryNotFoundException($"The specified directory does not exist: {basePath}");
+                return ""; // if not directory exist, not need to configure path
             }
 
             return basePath;
-        }        
+        }
     }
 }
