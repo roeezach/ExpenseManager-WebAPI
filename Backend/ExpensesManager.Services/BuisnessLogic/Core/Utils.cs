@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using System.Text.RegularExpressions;
 using ExpensesManager.DB;
-
+using Microsoft.Extensions.Configuration;
 namespace ExpensesManager.BuisnessLogic.Core
 {
     public static class Utils
@@ -47,7 +49,7 @@ namespace ExpensesManager.BuisnessLogic.Core
         /// <param name="year">year of the expense</param>
         /// <returns></returns>
         public static DateTime RegexMatcherDateToCharge(string searchItem, int creditCardChargeDay, DateTime currentPeriodRange)
-       {
+        {
             Match dateStructureFinder;
             string pattern = @"\d\d.\d\d|\d\.\d\d|\d\.\d\.\d|\d\d.\d|\d\.\d";
             if (Regex.IsMatch(searchItem, pattern))
@@ -82,12 +84,12 @@ namespace ExpensesManager.BuisnessLogic.Core
         public static int GetExpenseLinkedMonth(DateTime expenseDate, DateTime ChargedDate)
         {
             int returnedMonth;
-            if(ChargedDate.Day == REGULAR_CHARGE_DAY)
+            if (ChargedDate.Day == REGULAR_CHARGE_DAY)
             {
                 returnedMonth = ShouldKeepLinkedMonth(expenseDate, ChargedDate.Day, ChargedDate.Month);
                 return ValidMonth(returnedMonth);
             }
-            else if(ChargedDate.Day == SPECIAL_CHARGE_DAY)
+            else if (ChargedDate.Day == SPECIAL_CHARGE_DAY)
             {
                 returnedMonth = ChargedDate.Month - ONE_MONTH;
                 return ValidMonth(returnedMonth);
@@ -124,9 +126,9 @@ namespace ExpensesManager.BuisnessLogic.Core
         /// </summary>
         public static int GetUserChargeDay(int userID, AppDbContext appDbContext)
         {
-            var chargeDay =  appDbContext.Users.FirstOrDefault( day => day.UserID == userID);
+            var chargeDay = appDbContext.Users.FirstOrDefault(day => day.UserID == userID);
             if (chargeDay == null)
-                    return -1;
+                return -1;
             else
                 return chargeDay.CreditCardChargeDay;
         }
@@ -141,11 +143,65 @@ namespace ExpensesManager.BuisnessLogic.Core
             return random.Next();
         }
 
+        public static bool IsAppInContainer()
+        {
+            return Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+        }
+
+
+        public static string GetSecret(IConfiguration config)
+        {
+            bool isDocker = IsAppInContainer();
+            string? secret;
+
+            if (!isDocker)
+            {
+                secret = config.GetSection("Secrets")["JWT_SECRET"];
+            }
+
+            else
+            {
+                secret = Environment.GetEnvironmentVariable("JWT_SECRET");
+            }
+
+            if (string.IsNullOrEmpty(secret))
+            {
+                throw new ArgumentNullException("JWT_SECRET must be provided");
+            }
+
+            return secret;
+        }
+
+        public static string GetIssuer(IConfiguration config)
+        {
+            bool isDocker = IsAppInContainer();
+            string? issuer;
+
+            if (!isDocker)
+            {
+                issuer = config.GetSection("Secrets")["JWT_ISSUER"];
+            }
+
+            else
+            {
+                issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+            }
+
+            if (string.IsNullOrEmpty(issuer))
+            {
+                throw new ArgumentNullException("JWT_ISSUER must be provided");
+            }
+
+            return issuer;
+        }
+
+
+
         public static string ReformatHebrewString(string originString)
         {
             if (!string.IsNullOrEmpty(originString))
             {
-                
+
                 string hebrewRegex = @"-ל?\s*([\u0590-\u05FF]+)?\s*";
                 Match hebrewMatch = Regex.Match(originString, hebrewRegex);
                 string hebrewLetters = "";

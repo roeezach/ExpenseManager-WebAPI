@@ -5,7 +5,6 @@ namespace ExpensesManager.Services.BuisnessLogic.Map
 {
     public interface IExpenseMapperFactory
     {
-        ExpenseMapper GetBankMapper(BankTypes.FileTypes fileType);
-
+        ExpenseMapper CreateExpenseMapper();
     }
 }

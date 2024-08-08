@@ -6,17 +6,19 @@ WORKDIR /app
 WORKDIR /app/backend
 
 # Copy only the necessary files for the build context
-COPY Backend/ExpensesManager.WebAPI/*.sln ./ExpensesManager.WebAPI/
-COPY Backend/ExpensesManager.WebAPI/*.csproj ./ExpensesManager.WebAPI/
-COPY Backend/ExpensesManager.DB/*.csproj ./ExpensesManager.DB/
-COPY Backend/ExpensesManager.Services/*.csproj ./ExpensesManager.Services/
+COPY ["Backend/ExpensesManager.WebAPI/*.sln", "./ExpensesManager.WebAPI/"]
+COPY ["Backend/ExpensesManager.WebAPI/*.csproj", "./ExpensesManager.WebAPI/"]
+COPY ["Backend/ExpensesManager.DB/*.csproj", "./ExpensesManager.DB/"]
+COPY ["Backend/ExpensesManager.Services/*.csproj", "./ExpensesManager.Services/"]
+COPY ["Backend/ExpensesManager.Automation/*.csproj", "ExpensesManager.Automation/"]
+
 
 # Restore dependencies
 RUN dotnet restore ExpensesManager.WebAPI/ExpensesManager.WebAPI.csproj
-
-COPY Backend/ExpensesManager.WebAPI ./ExpensesManager.WebAPI
-COPY Backend/ExpensesManager.DB ./ExpensesManager.DB
-COPY Backend/ExpensesManager.Services ./ExpensesManager.Services
+COPY ["Backend/ExpensesManager.WebAPI", "./ExpensesManager.WebAPI"]
+COPY ["Backend/ExpensesManager.DB", "./ExpensesManager.DB"]
+COPY ["Backend/ExpensesManager.Services", "./ExpensesManager.Services"]
+COPY ["Backend/ExpensesManager.Automation", "ExpensesManager.Automation"]
 
 # Build projects
 RUN dotnet publish ExpensesManager.WebAPI/ExpensesManager.WebAPI.csproj -c Release -o /app/out
@@ -30,7 +32,7 @@ WORKDIR /app/out
 COPY --from=builder /app/out .
 
 # Expose ports
-EXPOSE 80
+EXPOSE 8080
 EXPOSE 443
 
 # Command to run when the container starts

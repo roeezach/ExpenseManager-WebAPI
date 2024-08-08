@@ -1,4 +1,5 @@
-﻿using ExpensesManager.DB.Models;
+﻿using System.Collections;
+using ExpensesManager.DB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -21,32 +22,41 @@ namespace ExpensesManager.DB
 
         #region Ctor
 
-        public AppDbContext()
+        private readonly IConfiguration _configuration;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration)
+            : base(options)
         {
-            Environment.SpecialFolder folder = Environment.SpecialFolder.ApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "ExpensesManagerApp.db");
+            _configuration = configuration;
         }
 
-        #endregion
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
 
-        #region Methods
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
-            // Check if running in a Docker container
-            bool inDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
-
-            // Configure the database path based on the environment
-            if (inDocker)
+            if (!optionsBuilder.IsConfigured)
             {
-                // Use the specific path within the container for the SQLite database
-                optionsBuilder.UseSqlite($"Data Source=/app/data/ExpensesManagerApp.db");
-            }
-            else
-            {
-                // Use the local development path for the SQLite database
-                optionsBuilder.UseSqlite($"Data Source={DbPath}");
+                string connectionString;
+                string isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
+                // Check if running in Docker
+                if (isDocker == "true")
+                {
+                    connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+                }
+                else
+                {
+                    // Use configuration when running locally
+                    connectionString = _configuration.GetConnectionString("Development");
+                }
+
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    throw new InvalidOperationException("Connection string is null or empty.");
+                }
+
+                optionsBuilder.UseNpgsql(connectionString);
             }
         }
 

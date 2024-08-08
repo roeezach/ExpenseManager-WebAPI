@@ -40,7 +40,7 @@ namespace ExpensesManager.Services.BuisnessLogic.Map.ExpenseMappers
         public double ExchangeCommission { get; set; }
 
 
-        public DataTable CustomNamingColumns(DataTable dataTable)
+        public override DataTable CustomNamingColumns(DataTable dataTable)
         {
             dataTable.Columns["Column0"].ColumnName = "CardInfo";
             dataTable.Columns["Column1"].ColumnName = "TransDate";

@@ -51,5 +51,11 @@ Configurations/
 .gitattributes
 .env
 .json
+.sql
 ExpensesManagerApp.db
 /Properties/launchSettings.json
+appsettings.json
+/Backend/ExpenseManager.Automation/appsettings.json
+ExpensesManagerApp.db-shm
+ExpensesManagerApp.db-wal
+ExpensesManagerApp.db.sql

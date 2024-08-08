@@ -8,5 +8,7 @@ namespace ExpensesManager.Services.Contracts
   {
     AuthenticatedUsers SignUp(Users users);
     AuthenticatedUsers SignIn(Users users);
+    Users? GetUserByUsername(string username);
+    void DeleteUserByUserId(int userId);
   }
 }

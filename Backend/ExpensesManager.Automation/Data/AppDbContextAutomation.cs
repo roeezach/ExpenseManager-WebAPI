@@ -24,25 +24,25 @@ namespace ExpensesManager.Automation
 
         #region Ctor
 
-        public AppDbContextAutomation()
+        private readonly IConfiguration _configuration;
+
+        public AppDbContextAutomation(DbContextOptions<AppDbContext> options, IConfiguration configuration)
         {
-            bool InDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
-            if (InDocker)
-                DbPath = Environment.GetEnvironmentVariable("SQLITE_DB_PATH");
-            else
-            {
-                Environment.SpecialFolder folder = Environment.SpecialFolder.ApplicationData;
-                var path = Environment.GetFolderPath(folder);
-                DbPath = System.IO.Path.Join(path, "ExpensesManagerApp.db");
-            }
+            _configuration = configuration;
         }
 
-        #endregion
+        public AppDbContextAutomation(DbContextOptions<AppDbContext> options)
+        { }
 
-        #region Methods
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Data Source={DbPath}");
+
+            if (!optionsBuilder.IsConfigured)
+            {
+
+                optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Development"));
+            }
         }
 
         #endregion

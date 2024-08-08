@@ -59,7 +59,6 @@ namespace ExpensesManager.Services.Services
             return Reader.GetExpenseFileDateRangeStart();
         }
 
-
         public DataTable GetReadFile(string path)
         {
             return Reader.ReadFile(path);
@@ -90,6 +89,5 @@ namespace ExpensesManager.Services.Services
         {
             return appDbContext.UploadedFiles.Where(file => file.UserID == userID).ToList();
         }
-
     }
 }

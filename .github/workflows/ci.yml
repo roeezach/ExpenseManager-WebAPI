@@ -13,9 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      docker:
-        image: docker:19.03.12
-        options: --privileged
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -31,15 +41,26 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and run tests using Docker Compose
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
+          ASPNETCORE_ENVIRONMENT: ${{ secrets.ASPNETCORE_ENVIRONMENT }}
+          CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
         run: |
-          docker-compose build
-          docker-compose up --abort-on-container-exit --exit-code-from automation
+          docker-compose -f docker-compose.yml build
+          docker-compose -f docker-compose.yml up --abort-on-container-exit --exit-code-from test
 
       - name: Push Docker images to Docker Hub
         if: success()
         run: |
-          docker-compose push
+          docker-compose -f docker-compose.yml push
           docker push roeezach/expenser-backend
           docker push roeezach/expenser-frontend
           docker push roeezach/expenser-db
           docker push roeezach/expenser-be-tests
+
+      - name: Shut down Docker Compose
+        run: docker-compose -f docker-compose.yml down

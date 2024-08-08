@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
 using ExpensesManager.DB;
@@ -13,12 +14,32 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+using ExpensesManager.BuisnessLogic.Core;
 
-var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddJsonFile("Configurations/appsettings.json", optional: true, reloadOnChange: true);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+// Check if running inside a Docker container
+bool isDocker = Utils.IsAppInContainer();
+
+if (!isDocker)
+{
+    // Add appsettings.json only if not running in Docker
+    builder.Configuration.AddJsonFile("Configurations/appsettings.json", optional: true, reloadOnChange: true);
+}
+
+// Always add environment variables
+builder.Configuration.AddEnvironmentVariables();
+
+// builder.Configuration.AddJsonFile("Configurations/appsettings.json", optional: true, reloadOnChange: true)
+// .AddEnvironmentVariables();
+
 builder.Services.AddControllers();
 
+
 builder.Services.AddDbContext<AppDbContext>();
+
+// builder.Services.AddDbContext<AppDbContextAutomation>();
 
 builder.Services.AddTransient<IExpenseReaderService, ExpenseReadService>();
 builder.Services.AddTransient<IExpenseMapperService, ExpenseMapperService>();
@@ -29,7 +50,8 @@ builder.Services.AddTransient<IRecalculatedExpenseService, RecalculatedExpenseSe
 builder.Services.AddTransient<IUsersService, UsersService>();
 builder.Services.AddTransient<IPasswordHasher, PasswordHasher>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddScoped<IExpenseMapperFactory, ExpenseMapperFactory>();
+builder.Services.AddScoped<ExpenseMapperFactory>();
+
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -38,8 +60,27 @@ builder.Services.AddSwaggerGen(c =>
         c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     });
 
-string secret = builder.Configuration.GetSection("Secrets")["JWT_SECRET"];
-string issuer = builder.Configuration.GetSection("Secrets")["JWT_ISSUER"];
+string secret = Utils.GetSecret(builder.Configuration);
+string issuer = Utils.GetIssuer(builder.Configuration);
+
+// if (!isDocker)
+// {
+//     secret = builder.Configuration.GetSection("Secrets")["JWT_SECRET"];
+//     issuer = builder.Configuration.GetSection("Secrets")["JWT_ISSUER"];
+// }
+
+// else
+// {
+//     secret = Environment.GetEnvironmentVariable("JWT_SECRET");
+//     issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+// }
+
+// // Load secrets from configuration
+// if (string.IsNullOrEmpty(secret) || string.IsNullOrEmpty(issuer))
+// {
+//     throw new ArgumentNullException("JWT_SECRET and JWT_ISSUER must be provided");
+// }
+
 
 builder.Services.AddAuthentication(opts =>
 {
@@ -48,7 +89,7 @@ builder.Services.AddAuthentication(opts =>
 })
     .AddJwtBearer(opts =>
     {
-        opts.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        opts.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
             ValidIssuer = issuer,
@@ -65,7 +106,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -78,6 +118,18 @@ app.UseCors(options =>
            .AllowAnyHeader();
 });
 
+// builder.Services.AddCors(options =>
+// {
+//     options.AddDefaultPolicy(builder =>
+//     {
+//         builder.AllowAnyOrigin()
+//                .AllowAnyMethod()
+//                .AllowAnyHeader();
+//     });
+// });
+
+// // ... later in the middleware pipeline ...
+// app.UseCors();
 
 
 app.UseAuthentication();
@@ -86,5 +138,11 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapDefaultControllerRoute();
 });
+
+// using (var scope = app.Services.CreateScope())
+// {
+//     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//     dbContext.Database.Migrate();
+// }
 
 app.Run();

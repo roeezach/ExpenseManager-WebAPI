@@ -1,8 +1,8 @@
 using ExpensesManager.Services;
 using ExpensesManager.Services.BuisnessLogic.Map;
-using ExpensesManager.Services.BuisnessLogic.Map.ExpenseMappers
+using ExpensesManager.Services.BuisnessLogic.Map.ExpenseMappers;
 
-    public class HapoalimExpenseMapperFactory : IExpenseMapperFactory
+public class HapoalimExpenseMapperFactory : IExpenseMapperFactory
 {
     public ExpenseMapper CreateExpenseMapper()
     {

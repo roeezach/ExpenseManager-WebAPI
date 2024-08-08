@@ -7,31 +7,33 @@ using ExpensesManager.Services.Contracts;
 
 namespace ExpensesManager.Services.BuisnessLogic.Map
 {
-    public class ExpenseMapperFactory : IExpenseMapperFactory
+    public class ExpenseMapperFactory
     {
         private readonly ICategoryService _categoryService;
+        private readonly Dictionary<BankTypes.FileTypes, Func<ExpenseMapper>> m_factories;
 
         public ExpenseMapperFactory(ICategoryService categoryService)
         {
             _categoryService = categoryService;
-        }
-
-        public ExpenseMapper GetBankMapper(BankTypes.FileTypes fileType)
-        {
-            switch (fileType)
+            m_factories = new Dictionary<BankTypes.FileTypes, Func<ExpenseMapper>>
             {
-                case BankTypes.FileTypes.Habinleuimi:
-                    return new HabinleuimiExpenseMapper();
-                case BankTypes.FileTypes.Hapoalim:
-                    return new HapoalimExpenseMapper();
-                case BankTypes.FileTypes.Max:
-                    return new MaxExpenseMapper();
-                default:
-                    throw new NotSupportedException("Invalid bank type.");
-            }
+                { BankTypes.FileTypes.Hapoalim, () => new HapoalimExpenseMapper() },
+                { BankTypes.FileTypes.Habinleuimi, () => new HabinleuimiExpenseMapper() },
+                { BankTypes.FileTypes.Max, () => new MaxExpenseMapper() }
+            };
         }
 
-        public static T GetMapper<T>(IServiceProvider serviceProvider) where T : class
+        public ExpenseMapper CreateExpenseMapper(BankTypes.FileTypes fileType)
+        {
+            if (m_factories.TryGetValue(fileType, out var factory))
+            {
+                return factory();
+            }
+
+            throw new NotSupportedException("Invalid bank type.");
+        }
+
+        public T GetMapper<T>(IServiceProvider serviceProvider) where T : class
         {
             var categoryService = serviceProvider.GetService(typeof(ICategoryService)) as ICategoryService;
 

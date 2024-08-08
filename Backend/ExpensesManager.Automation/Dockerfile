@@ -26,7 +26,7 @@ COPY Backend/ExpensesManager.Automation ./ExpensesManager.Automation
 COPY Backend/ExpensesManager.Services ./ExpensesManager.Services
 COPY Backend/ExpensesManager.DB ./ExpensesManager.DB
 
-ENV SQLITE_DB_PATH=/app/ExpensesManager.DB/test_database.db
+ENV DB_PATH=/app/ExpensesManager.DB/test_database.db
 
 RUN ls -R /app  # Print the directory structure for debugging
 

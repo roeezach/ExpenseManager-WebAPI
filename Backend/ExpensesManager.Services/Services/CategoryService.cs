@@ -1,6 +1,7 @@
 ﻿using ExpensesManager.DB;
 using ExpensesManager.DB.Models;
 using ExpensesManager.Services.Contracts;
+using Newtonsoft.Json;
 
 namespace ExpensesManager.Services.Services
 {
@@ -18,6 +19,22 @@ namespace ExpensesManager.Services.Services
             appDbContext.SaveChanges();
 
             return category;
+        }
+
+        public Categories CreateBasicCategoriesForRegisteredUsers(int userID)
+        {
+            string mappedCategoriesJson = Constants.DEFAULT_CATEGORIES;
+
+            Categories defaultCategory = new()
+            {
+                UserID = userID,
+                MappedCategoriesJson = mappedCategoriesJson
+            };
+
+            Console.WriteLine($"the default categories are {defaultCategory}");
+            appDbContext.Categories.Add(defaultCategory);
+            appDbContext.SaveChanges();
+            return defaultCategory;
         }
 
         public void DeleteCategory(Categories deletedCategory)

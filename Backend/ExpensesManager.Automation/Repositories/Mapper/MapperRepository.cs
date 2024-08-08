@@ -6,14 +6,14 @@ using ExpensesManager.DB;
 
 namespace ExpensesManager.Automation.Repositories.Mapper
 {
-    
+
     public class MapperRepository : IMapperRepository
     {
-        private readonly AppDbContextAutomation m_AppDbContext;
+        private readonly AppDbContext m_AppDbContext;
 
         public List<ExpenseRecord> MappedRecords { get; set; }
 
-        public MapperRepository(AppDbContextAutomation dbContext)
+        public MapperRepository(AppDbContext dbContext)
         {
             m_AppDbContext = dbContext;
         }
@@ -29,9 +29,9 @@ namespace ExpensesManager.Automation.Repositories.Mapper
             return MappedRecords;
         }
 
-        public int GetChargeDay(int userId) 
+        public int GetChargeDay(int userId)
         {
-            return m_AppDbContext.Users.FirstOrDefault( usr => usr.UserID == userId).CreditCardChargeDay;
+            return m_AppDbContext.Users.FirstOrDefault(usr => usr.UserID == userId).CreditCardChargeDay;
         }
 
     }

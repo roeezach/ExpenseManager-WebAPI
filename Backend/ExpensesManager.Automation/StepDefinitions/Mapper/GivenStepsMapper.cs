@@ -16,16 +16,16 @@ namespace ExpenseManager.Automation.StepDefinitions.Mapper
     public class GivenStepsMapper
     {
         private ScenarioContext _scenarioContext;
-        private AppDbContextAutomation _appDbContextAutomation;
+        private AppDbContext _appDbContextAutomation;
         private MapperContext _mapperContext;
         private IMapperRepository _mapperRepository;
 
-        public GivenStepsMapper(ScenarioContext scenrioContex, AppDbContextAutomation appDbContextAutomation)
+        public GivenStepsMapper(ScenarioContext scenrioContex, AppDbContext appDbContext)
         {
-            var serviceProvider = ServiceSetup.SetupServices();
+            // var serviceProvider = ServiceSetup.SetupServices();
             _scenarioContext = scenrioContex;
-            _appDbContextAutomation = appDbContextAutomation;
-            _mapperRepository = new MapperRepository(appDbContextAutomation);
+            _appDbContextAutomation = appDbContext;
+            _mapperRepository = new MapperRepository(appDbContext);
             _scenarioContext.Add("Database", _mapperRepository);
         }
 

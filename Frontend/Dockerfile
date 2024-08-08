@@ -10,3 +10,6 @@ RUN npm install
 COPY --chown=node:node ./ ./
  
 CMD ["npm", "start"]
+# this is good for Prod
+# library - serve.
+# Three shake, when we do npm run build it export that 

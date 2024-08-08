@@ -10,7 +10,6 @@ namespace ExpensesManager.Services.Services
         #region Const
 
         private const int DEFAULT_DAY = 1;
-        // private const int LOGGED_IN_USER_ID = 19773792;
 
         #endregion
 

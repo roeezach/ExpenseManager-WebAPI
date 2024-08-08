@@ -6,6 +6,8 @@ using ExpensesManager.Services.Contracts;
 using ExpensesManager.Integrations.SplitWiseModels;
 using System.Threading.Tasks;
 using ExpensesManager.Services;
+using Microsoft.EntityFrameworkCore.Query;
+using ExpensesManager.Services.Services;
 
 namespace ExpensesManager.WebAPI.Controllers
 {
@@ -14,10 +16,12 @@ namespace ExpensesManager.WebAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsersService m_UsersService;
+        private readonly ICategoryService m_CategoryService;
 
-        public UsersController(IUsersService usersService)
+        public UsersController(IUsersService usersService, ICategoryService categoryService)
         {
             m_UsersService = usersService;
+            m_CategoryService = categoryService;
         }
 
         [HttpPost("SignUp")]
@@ -25,7 +29,13 @@ namespace ExpensesManager.WebAPI.Controllers
         {
             try
             {
-                var result = m_UsersService.SignUp(user);
+                AuthenticatedUsers result = m_UsersService.SignUp(user);
+                if (result == null)
+                {
+                    return StatusCode(500, "User service returned null.");
+                }
+                Categories defaultCategories = m_CategoryService.CreateBasicCategoriesForRegisteredUsers(result.UserID);
+                Console.WriteLine("Default category for the new user have been created");
                 return Created("authenticated user: ", result);
             }
             catch (UsernameExistException e)
@@ -48,5 +58,23 @@ namespace ExpensesManager.WebAPI.Controllers
             }
         }
 
+        [HttpGet("GetUser")]
+        public IActionResult GetUser(string username)
+        {
+            var result = m_UsersService.GetUserByUsername(username);
+            return Ok(result);                       
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteUser(string username)
+        {
+            var user = m_UsersService.GetUserByUsername(username);
+            if (user != null)
+            {
+                m_UsersService.DeleteUserByUserId(user.UserID);
+                return Ok();
+            }
+            return NotFound();
+        }
     }
 }

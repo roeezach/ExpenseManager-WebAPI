@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
+using ExpensesManager.BuisnessLogic.Core;
 
 namespace ExpensesManager.Services;
 public static class JwtGenerator
@@ -20,8 +21,11 @@ public static class JwtGenerator
     private static string GenerateUserToken(Claim[] claims, DateTime expires, IConfiguration config)
     {
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-        string? secret = config.GetSection("Secrets")["JWT_SECRET"];
-        string? issuer = config.GetSection("Secrets")["JWT_ISSUER"];
+        // string? secret = config.GetSection("Secrets")["JWT_SECRET"];
+        // string? issuer = config.GetSection("Secrets")["JWT_ISSUER"];
+        string? secret = Utils.GetSecret(config);
+        string? issuer = Utils.GetIssuer(config);
+
         byte[] key = Encoding.ASCII.GetBytes(secret);
 
         var tokenDescriptor = new SecurityTokenDescriptor

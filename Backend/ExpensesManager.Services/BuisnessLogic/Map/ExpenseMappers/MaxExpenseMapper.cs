@@ -36,7 +36,7 @@ namespace ExpensesManager.Services.BuisnessLogic.Map.ExpenseMappers
         [DataNames("OtherDetails")]
         public string? AdditionalDetails { get; set; }
 
-        public DataTable CustomNamingColumns(DataTable dataTable)
+        public override DataTable CustomNamingColumns(DataTable dataTable)
         {
             dataTable.Columns[0].ColumnName = "TransDate";
             dataTable.Columns[1].ColumnName = "Desc";

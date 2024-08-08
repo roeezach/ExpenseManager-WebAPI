@@ -1,33 +1,12 @@
-# Build Stage
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS builder
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
 
-# Copy necessary files for the build context
-COPY Backend/ExpensesManager.Automation/*.csproj ./ExpensesManager.Automation/
-COPY Backend/ExpensesManager.Services/*.csproj ./ExpensesManager.Services/
-COPY Backend/ExpensesManager.DB/*.csproj ./ExpensesManager.DB/
+COPY ["Backend/ExpensesManager.Automation/ExpensesManager.Automation.csproj", "ExpensesManager.Automation/"]
+COPY ["Backend/ExpensesManager.DB/ExpensesManager.DB.csproj", "ExpensesManager.DB/"]
+COPY ["Backend/ExpensesManager.Services/ExpensesManager.Services.csproj", "ExpensesManager.Services/"]
+RUN dotnet restore "ExpensesManager.Automation/ExpensesManager.Automation.csproj"
 
-# Restore dependencies
-RUN dotnet restore ExpensesManager.Automation/ExpensesManager.Automation.csproj
+COPY Backend/ .
+WORKDIR "/src/ExpensesManager.Automation"
 
-# Copy the rest of the files
-COPY Backend/ExpensesManager.Automation ./ExpensesManager.Automation
-COPY Backend/ExpensesManager.Services ./ExpensesManager.Services
-COPY Backend/ExpensesManager.DB ./ExpensesManager.DB
-
-# Build projects
-RUN dotnet publish ExpensesManager.Automation/ExpensesManager.Automation.csproj -c Release -o /app/out
-
-# Test Stage
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS test
-WORKDIR /app
-COPY --from=builder /app/out ./
-COPY Backend/ExpensesManager.Automation ./ExpensesManager.Automation
-COPY Backend/ExpensesManager.Services ./ExpensesManager.Services
-COPY Backend/ExpensesManager.DB ./ExpensesManager.DB
-
-ENV SQLITE_DB_PATH=/app/ExpensesManager.DB/ExpensesManagerApp.db
-
-RUN ls -R /app  # Print the directory structure for debugging
-
-RUN dotnet test ExpensesManager.Automation/ExpensesManager.Automation.csproj
+CMD ["dotnet", "vstest", "/app/ExpensesManager.Automation/bin/Release/net6.0/ExpensesManager.Automation.dll", "--logger:trx", "--ResultsDirectory:/app/TestResults"]

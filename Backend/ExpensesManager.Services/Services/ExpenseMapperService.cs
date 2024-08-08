@@ -18,7 +18,7 @@ namespace ExpensesManager.Services.Services
         #region Members
         private readonly AppDbContext m_AppDbContext;
         private readonly ICategoryService m_CategoryService;
-        private readonly IExpenseMapperFactory m_ExpenseMapperFactory;
+        private readonly ExpenseMapperFactory m_ExpenseMapperFactory;
         private readonly IServiceProvider m_ServiceProvider;
         private readonly Users m_currUser;
 
@@ -30,14 +30,14 @@ namespace ExpensesManager.Services.Services
         #region Ctor
 
         public ExpenseMapperService(AppDbContext context, ICategoryService categoryService,
-        IExpenseMapperFactory expenseMapperFactory, IServiceProvider serviceProvider, IHttpContextAccessor httpContextAccessor)
+        ExpenseMapperFactory expenseMapperFactory, IServiceProvider serviceProvider, IHttpContextAccessor httpContextAccessor)
         {
             m_AppDbContext = context;
             m_ExpenseMapperFactory = expenseMapperFactory;
             m_CategoryService = categoryService;
             m_ServiceProvider = serviceProvider;
             Mapper = new ExpenseMapper(serviceProvider);
-            CategoryExpense = ExpenseMapperFactory.GetMapper<CategoryExpenseMapper>(m_ServiceProvider);
+            CategoryExpense = expenseMapperFactory.GetMapper<CategoryExpenseMapper>(m_ServiceProvider);
             m_currUser = m_AppDbContext.Users.FirstOrDefault(u => u.Username == httpContextAccessor.HttpContext.User.Identity.Name);
         }
 

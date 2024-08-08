@@ -71,7 +71,7 @@ namespace ExpensesManager.Services
         /// <param name="dataTable">the raw data from the file</param>
         /// <param name="fileType"> expenses, movment or other </param>
         /// <returns>List with mapped categories </returns>
-        public List<ExpenseMapper> MapFile(DataTable dataTable, BankTypes.FileTypes fileType, int userId, IExpenseMapperFactory expenseMapperFactory)
+        public List<ExpenseMapper> MapFile(DataTable dataTable, BankTypes.FileTypes fileType, int userId, ExpenseMapperFactory expenseMapperFactory)
         {
             NamingColumns(dataTable, fileType, expenseMapperFactory);
             DataNamesMapper<ExpenseMapper> namesMapper = new DataNamesMapper<ExpenseMapper>();
@@ -83,7 +83,7 @@ namespace ExpensesManager.Services
             {
                 if (!string.IsNullOrEmpty(mappedRow.ExpenseDescription) && mappedRow.PriceAmount > 0)
                 {
-                    mappedRow.CategoryData = ExpenseMapperFactory.GetMapper<CategoryExpenseMapper>(_serviceProvider);
+                    mappedRow.CategoryData = expenseMapperFactory.GetMapper<CategoryExpenseMapper>(_serviceProvider);
                     mappedRow.CategoryData.CategoryKey = mappedRow.CategoryData.GetCategoryMapping(mappedRow.ExpenseDescription, userId);
                     mappedList.Add(mappedRow);
                 }
@@ -107,24 +107,21 @@ namespace ExpensesManager.Services
 
         #endregion Public Methods
 
+        #region Virtual Methods
+
+        public virtual DataTable CustomNamingColumns(DataTable dataTable)
+        {
+            throw new NotImplementedException("CustomNamingColumns method must be overridden in a derived class.");
+        }
+
+        #endregion
+
         #region Private Methods
 
-        private void NamingColumns(DataTable dataTable, BankTypes.FileTypes fileType, IExpenseMapperFactory expenseMapperFactory)
+        private void NamingColumns(DataTable dataTable, BankTypes.FileTypes fileType, ExpenseMapperFactory expenseMapperFactory)
         {
-            ExpenseMapper mapperType = expenseMapperFactory.GetBankMapper(fileType);
-
-            if (mapperType is HabinleuimiExpenseMapper habeinlumiMapper)
-            {
-                habeinlumiMapper.CustomNamingColumns(dataTable);
-            }
-            else if (mapperType is HapoalimExpenseMapper hapoalimMapper)
-            {
-                hapoalimMapper.CustomNamingColumns(dataTable);
-            }
-            else if (mapperType is MaxExpenseMapper maxMapper)
-            {
-                maxMapper.CustomNamingColumns(dataTable);
-            }
+            ExpenseMapper mapperType = expenseMapperFactory.CreateExpenseMapper(fileType);
+            mapperType.CustomNamingColumns(dataTable);
         }
 
         #endregion
