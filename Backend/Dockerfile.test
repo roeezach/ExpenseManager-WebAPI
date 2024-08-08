@@ -1,0 +1,12 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /app
+
+COPY ["ExpensesManager.Automation/ExpensesManager.Automation.csproj", "ExpensesManager.Automation/"]
+COPY ["ExpensesManager.DB/ExpensesManager.DB.csproj", "ExpensesManager.DB/"]
+COPY ["ExpensesManager.Services/ExpensesManager.Services.csproj", "ExpensesManager.Services/"]
+RUN dotnet restore "ExpensesManager.Automation/ExpensesManager.Automation.csproj"
+
+COPY / .
+WORKDIR "/app/ExpensesManager.Automation"
+
+CMD ["dotnet", "test", "ExpensesManager.Automation.csproj"]
