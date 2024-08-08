@@ -20,7 +20,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         ports:
-          - 5433:5433 # host port must be different then 5432, gitnub action using this port.
+          - 5433:5432 # host port must be different then 5432, gitnub action using this port.
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
