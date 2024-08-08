@@ -18,8 +18,9 @@ namespace ExpenseManager.Automation.Utils
         {
             var serviceCollection = new ServiceCollection();
 
-            var basePath = BuildBasePath();
-            var builder = new ConfigurationBuilder().SetBasePath(basePath);
+            // var basePath = BuildBasePath();
+            var builder = new ConfigurationBuilder();
+            // .SetBasePath(basePath);
 
             bool isRunningInContainer = ExpensesManager.BuisnessLogic.Core.Utils.IsAppInContainer();
 
