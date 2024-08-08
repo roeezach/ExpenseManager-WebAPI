@@ -55,7 +55,6 @@ services:
 
   test:
     image: roeezach/expenser-be-automation:latest
-    container_name: roeezach/expenser-be-automation
     build:
       context: ./Backend
       dockerfile: Dockerfile.test
