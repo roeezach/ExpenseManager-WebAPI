@@ -45,9 +45,6 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-      - name: Stop any running containers
-        run: docker-compose -f docker-compose.yml down
-
       - name: Build and run tests using Docker Compose
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}

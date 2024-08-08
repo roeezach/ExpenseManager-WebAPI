@@ -18,15 +18,14 @@ namespace ExpenseManager.Automation.Utils
         {
             var serviceCollection = new ServiceCollection();
 
-            // var basePath = BuildBasePath();
+            var basePath = BuildBasePath();
             var builder = new ConfigurationBuilder();
-            // .SetBasePath(basePath);
 
             bool isRunningInContainer = ExpensesManager.BuisnessLogic.Core.Utils.IsAppInContainer();
 
             if (!isRunningInContainer)
             {
-                builder.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                builder.SetBasePath(basePath).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             }
 
             builder.AddEnvironmentVariables();
