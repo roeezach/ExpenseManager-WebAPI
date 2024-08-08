@@ -57,6 +57,7 @@ jobs:
           JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
           ASPNETCORE_ENVIRONMENT: ${{ secrets.ASPNETCORE_ENVIRONMENT }}
           CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
+          DB_PORT: 5433
         run: |
           docker-compose -f docker-compose.yml build
           docker-compose -f docker-compose.yml up --abort-on-container-exit --exit-code-from test
