@@ -1,4 +1,5 @@
-﻿using ExpensesManager.DB.Models;
+﻿using System.Collections;
+using ExpensesManager.DB.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -7,14 +8,13 @@ namespace ExpensesManager.DB
     public class AppDbContext : DbContext
     {
 
-
         #region Properties
         public DbSet<ExpenseRecord> Expenses { get; set; }
         public DbSet<Categories> Categories { get; set; }
-        public DbSet <SwRecords> SpliteWise{ get; set; }
+        public DbSet<SwRecords> SpliteWise { get; set; }
         public DbSet<TotalExpensePerCategory> TotalExpensesPerCategory { get; set; }
         public DbSet<Users> Users { get; set; }
-        public DbSet<RecalculatedExpenseRecord> RecalculatedExpenseRecords{ get; set; }
+        public DbSet<RecalculatedExpenseRecord> RecalculatedExpenseRecords { get; set; }
         public DbSet<UploadedFile> UploadedFiles { get; set; }
         public string DbPath { get; }
 
@@ -22,18 +22,44 @@ namespace ExpensesManager.DB
 
         #region Ctor
 
-        public AppDbContext()
+        private readonly IConfiguration _configuration;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration)
+            : base(options)
         {
-            Environment.SpecialFolder folder = Environment.SpecialFolder.ApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "ExpensesManagerApp.db");
+            _configuration = configuration;
         }
 
-        #endregion
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
 
-        #region Methods
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-              => optionsBuilder.UseSqlite($"Data Source={DbPath}");        
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                string connectionString;
+                string isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
+                // Check if running in Docker
+                if (isDocker == "true")
+                {
+                    connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+                }
+                else
+                {
+                    // Use configuration when running locally
+                    connectionString = _configuration.GetConnectionString("Development");
+                }
+
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    throw new InvalidOperationException("Connection string is null or empty.");
+                }
+
+                optionsBuilder.UseNpgsql(connectionString);
+            }
+        }
+
         #endregion
 
     }

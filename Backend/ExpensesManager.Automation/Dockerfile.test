@@ -1,0 +1,12 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+
+COPY ["Backend/ExpensesManager.Automation/ExpensesManager.Automation.csproj", "ExpensesManager.Automation/"]
+COPY ["Backend/ExpensesManager.DB/ExpensesManager.DB.csproj", "ExpensesManager.DB/"]
+COPY ["Backend/ExpensesManager.Services/ExpensesManager.Services.csproj", "ExpensesManager.Services/"]
+RUN dotnet restore "ExpensesManager.Automation/ExpensesManager.Automation.csproj"
+
+COPY Backend/ .
+WORKDIR "/src/ExpensesManager.Automation"
+
+CMD ["dotnet", "vstest", "/app/ExpensesManager.Automation/bin/Release/net6.0/ExpensesManager.Automation.dll", "--logger:trx", "--ResultsDirectory:/app/TestResults"]

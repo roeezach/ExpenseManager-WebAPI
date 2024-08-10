@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ExpensesManger.Services.Contracts;
+using ExpensesManager.Services.Contracts;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 
@@ -48,7 +48,7 @@ namespace ExpensesManager.WebAPI.Controllers
             {
                 file.CopyTo(stream);
             }
-            bool isFileCreated = m_ExpenseReaderService.SaveUploadedFile(fileName, System.DateTime.Now, userID, fileType, monthToMap, yearToMap);
+            bool isFileCreated = m_ExpenseReaderService.SaveUploadedFile(fileName, System.DateTime.UtcNow, userID, fileType, monthToMap, yearToMap);
             return CreatedAtRoute("GetFilePath", new { filePath = path, fileName, isFileCreated });
         }
 

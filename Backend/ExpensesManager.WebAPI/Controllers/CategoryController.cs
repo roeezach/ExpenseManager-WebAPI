@@ -1,7 +1,7 @@
 ﻿using ExpensesManager.DB.Models;
 using Microsoft.AspNetCore.Mvc;
 using ExpensesManager.BuisnessLogic.Core;
-using ExpensesManger.Services.Contracts;
+using ExpensesManager.Services.Contracts;
 
 namespace ExpensesManager.WebAPI.Controllers
 {
@@ -22,7 +22,7 @@ namespace ExpensesManager.WebAPI.Controllers
             return Ok(m_CategoryService.GetCategories());
         }
 
-        [HttpGet("{userID:int}", Name ="GetUserCategories")]
+        [HttpGet("{userID:int}", Name = "GetUserCategories")]
         public IActionResult GetUserCategories(int userID)
         {
             return Ok(m_CategoryService.GetUserCategories(userID));
@@ -32,7 +32,7 @@ namespace ExpensesManager.WebAPI.Controllers
         public IActionResult CreateCategory(Categories catrgory)
         {
             Categories categoryItem = m_CategoryService.CreateCategory(catrgory);
-            return CreatedAtRoute("GetCategories", new { requestID = Utils.GenerateRandomID()}, categoryItem);
+            return CreatedAtRoute("GetCategories", new { requestID = Utils.GenerateRandomID() }, categoryItem);
         }
 
         [HttpDelete]

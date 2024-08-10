@@ -87,7 +87,7 @@ const RegistrationForm: React.FC = () => {
       const response = await usersService.SignUp(user);
       console.log('Registration successful:', response);
       cookie.set('token', response.token);
-      cookie.set('token', response.username);
+      cookie.set('username', response.username);
       setUserData(response.username ? { username: response.username , userID: response.userID} : null);
       setIsLoggedInData(true);
       navigate('../home');

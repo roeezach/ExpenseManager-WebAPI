@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System;
 using ExpensesManager.DB.Models;
-using ExpensesManger.Services.BuisnessLogic.Map.Common;
-using ExpensesManger.Services.Contracts;
+using ExpensesManager.Services.BuisnessLogic.Map.Common;
+using ExpensesManager.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
@@ -37,18 +37,18 @@ namespace ExpensesManager.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateMappedExpenses(string fileName, BankTypes.FileTypes fileType,int userID, DateTime chargedDate)
+        public IActionResult CreateMappedExpenses(string fileName, BankTypes.FileTypes fileType, int userID, DateTime chargedDate)
         {
             DataTable fileData = m_ExpenseReaderService.GetReadFile(m_ExpenseReaderService.GetPathWithFile(fileName));
-            var mappedExpense = m_ExpenseMapperService.CreateExpenses(fileData, fileType, userID, chargedDate );
+            var mappedExpense = m_ExpenseMapperService.CreateExpenses(fileData, fileType, userID, chargedDate);
 
             int routeMonth = chargedDate.Month - 1;
             int routeYear = chargedDate.Year;
 
             if (routeMonth == 1)
             {
-                routeMonth = 12; 
-                routeYear--; 
+                routeMonth = 12;
+                routeYear--;
             }
             else
             {
@@ -59,8 +59,8 @@ namespace ExpensesManager.WebAPI.Controllers
         }
 
         [HttpDelete]
-        public IActionResult DeleteMappedExpenses(int linkedMonth,int linkedYear, int userID)
-        {            
+        public IActionResult DeleteMappedExpenses(int linkedMonth, int linkedYear, int userID)
+        {
             m_ExpenseMapperService.DeleteExpenses(linkedMonth, linkedYear, userID);
             return Ok();
         }
