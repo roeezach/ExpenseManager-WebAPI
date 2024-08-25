@@ -17,6 +17,7 @@ th app has a user managment machenisem based on `JWT`.
 
 ### Technologies:
 <div>
+  <img src="https://github.com/devicons/devicon/blob/master/icons/docker/docker-plain-wordmark.svg" title="Docker" alt="Docker" width="40" height="40"/>&nbsp;  
   <img src="https://github.com/devicons/devicon/blob/master/icons/csharp/csharp-original.svg" title="Csharp" alt="Csharp" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/dotnetcore/dotnetcore-original.svg" title="Csharp" alt="Csharp" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/react/react-original-wordmark.svg" title="React" alt="React" width="40" height="40"/>&nbsp;
@@ -27,8 +28,8 @@ th app has a user managment machenisem based on `JWT`.
 </div>
 
 #### Future Features
-- Automation testing.
-- CI/CD with github actions or Travis.
-- Dockrize the app.
+- Frontend Automation testing.
+- Deploy to cloud (azure or aws)
+- Budget analysis with OpenAI API
 - Monthly balance Summary
 - Saving and Invesment Calculator
