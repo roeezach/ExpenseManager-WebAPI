@@ -33,3 +33,70 @@ th app has a user managment machenisem based on `JWT`.
 - Budget analysis with OpenAI API
 - Monthly balance Summary
 - Saving and Invesment Calculator
+
+## Architecture
+
+### Request Flow
+```mermaid
+graph TD
+    A[Frontend] --> B(API Controllers)
+    B --> C(Services)
+    C --> D[AppDbContext]
+    D --> E[(Database)]
+```
+
+### Class Relationships
+```mermaid
+classDiagram
+    class CategoryController
+    class MapperController
+    class ReaderController
+    class RecalculateExpenseController
+    class SplitewiseExpensesController
+    class TotalExpensePerCategoryController
+    class UsersController
+
+    class CategoryService
+    class ExpenseMapperService
+    class ExpenseReadService
+    class RecalculatedExpenseService
+    class SplitewiseExpenseService
+    class TotalExpensesPerCategoryService
+    class UsersService
+
+    class AppDbContext
+
+    class ExpenseRecord
+    class Categories
+    class SwRecords
+    class Users
+    class TotalExpensePerCategory
+    class RecalculatedExpenseRecord
+    class UploadedFile
+
+    CategoryController --> CategoryService
+    MapperController --> ExpenseMapperService
+    ReaderController --> ExpenseReadService
+    RecalculateExpenseController --> RecalculatedExpenseService
+    SplitewiseExpensesController --> SplitewiseExpenseService
+    TotalExpensePerCategoryController --> TotalExpensesPerCategoryService
+    UsersController --> UsersService
+
+    CategoryService --> AppDbContext
+    ExpenseMapperService --> AppDbContext
+    ExpenseReadService --> AppDbContext
+    RecalculatedExpenseService --> AppDbContext
+    SplitewiseExpenseService --> AppDbContext
+    TotalExpensesPerCategoryService --> AppDbContext
+    UsersService --> AppDbContext
+
+    AppDbContext --> ExpenseRecord
+    AppDbContext --> Categories
+    AppDbContext --> SwRecords
+    AppDbContext --> Users
+    AppDbContext --> TotalExpensePerCategory
+    AppDbContext --> RecalculatedExpenseRecord
+    AppDbContext --> UploadedFile
+```
+
+Diagrams are stored in [docs/architecture](docs/architecture).
